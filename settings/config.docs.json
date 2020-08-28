@@ -1,0 +1,21 @@
+{
+	"bot": {
+		"owners": ["<user ID>", "<second user ID>"],//User IDs that should get access to bot owner commands
+		"prefix": "schwi.",//the bots prefix
+		"status": "online",//the status the bot should use, can be "online", "idle", "dnd" (do not disturb) or "invisible".
+		"activityType": "listening",//the activity type the bot should use, can be "PLAYING", "WATCHING", "LISTENING" or "STREAMING".
+		"activityName": "schwi.help",//the activity name the bot should use.
+		"activityURL": ""//the stream URL in case the "STREAMING" activity type is used. Can only be Twitch or YouTube links.
+	},
+	"rss": {
+		"interval": 30//the interval in which the bot checks for new articles - time is in minutes - must be at least 10
+	},
+	"log": {
+		"level": "info",//what level should be output, can be one of the following: "debug" > "spamInfo" > "info"  > "important" > "silent" -- "spamInfo" is basically the same as "info" except a lot more spammy at times, will post every single feed being parsed along other things
+		"discordLogOutput": false,//if logs should be outputted to discord as well (note: will not output spamInfo and below)
+		"discordLogChannels": "<channel ID>"//the channel the logs should be posted to
+	},
+	"fixed": { //do not change anything in here - this is only for the bot itself
+		"configJSONVersion": 1
+	}
+}

@@ -2,8 +2,8 @@ const { Command } = require('discord.js-commando');
 
 const misc = require('../../misc.js');
 
-const config = require('../../config.json');
-const db = require('../../database.json');
+const config = require('../../settings/config.json');
+const db = require('../../settings/database.json');
 
 module.exports = class AddCommand extends Command {
 	constructor(client) {
@@ -44,7 +44,12 @@ module.exports = class AddCommand extends Command {
 		}
 
 		db.g431975254525739008.rss.feeds.push(feed);
-		misc.saveDB();
-		return message.say('Added **' + name + '** to <#' + channel + '>.');
+
+		var output = 'Added **' + name + '** to <#' + channel + '>.';
+		misc.log(this.client, output, 'info', true);
+
+		misc.saveDB(this.client);
+
+		return message.say(output);
 	}
 };

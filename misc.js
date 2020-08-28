@@ -3,8 +3,8 @@ const path = require('path');
 
 const fs = require("fs");
 
-const config = require('./config.json');
-const db = require('./database.json');
+const config = require('./settings/config.json');
+const db = require('./settings/database.json');
 
 module.exports = {
 	/*
@@ -12,9 +12,17 @@ module.exports = {
 	*
 	* @param {object} client The original client from index.js.
 	* @param {string} text The text that should be logged.
+	* @param {string} level Level of importance, check logLevelToNum() for available levels.
 	* @param {boolean} cliOnly If it should only be logged to commandline.
 	*/
-	log: function (client, text, cliOnly) {
+	log: function (client, text, level, cliOnly) {
+		level = module.exports.logLevelToNum(level);
+		var configLevel = module.exports.logLevelToNum(config.log.level);
+
+		if (level < configLevel) {
+			return;
+		}
+
 		var time = new Date();
 		time = time + '';
 		time = time.slice(16,24);
@@ -22,21 +30,67 @@ module.exports = {
 		text = '[' + time + '] ' + text;
 
 		console.log(text);
-		if (client && cliOnly != true) {
+
+		//check if client is actually a client - check if log level is important or higher - check if it's not CLI only - check if discord logs are allowed in config.json
+		if (typeof client === 'object' && client != null && level >= 3 && cliOnly != true && config.bot.discordLogOutput === true) {
 			module.exports.sendMessage(client, '748143884911116328', text);
 		}
 	},
 	/*
+	* Transform a log level string into a number for easy comparing (like only do x if log level is important or higher).
+	* Numbers shouldn't be used directly so more levels can be easily added if necessary.
+	*
+	* @param {string} level Level of importance, can be "debug" > "spamInfo" > "info" > "important".
+	*/
+	logLevelToNum: function (level) {
+		switch (level) {
+			case 'debug':
+				level = 1;
+				break;
+			case 'spamInfo': //every bit of info without anything that's purely for debugging (like showing variables)
+				level = 2;
+				break;
+			case 'info': //useful info like when RSS feeds get parsed but not too spammy like posting every single RSS feed being parsed
+				level = 3;
+				break;
+			case 'important':
+				level = 4;
+				break;
+		}
+		return level;
+	},
+	/*
 	* Saves the databse to database.json.
 	* Has to be called after each edit to the DB so data doesn't get lost.
+	*
+	* @param {object} client The original client from index.js. Only needed for sendMessage().
 	*/
-	saveDB: function () {
-		fs.writeFile('./database.json', JSON.stringify(db, null, '\t'), err => {
+	saveDB: function (client) {
+		module.exports.saveFile(client, './settings/database.json', db);
+	},
+	/*
+	* Saves the config to config.json.
+	* Has to be called after each edit to config so data doesn't get lost.
+	*
+	* @param {object} client The original client from index.js. Only needed for sendMessage().
+	*/
+	saveConfig: function (client) {
+		module.exports.saveFile(client, './settings/config.json', config);
+	},
+	/*
+	* Save a file, mainly used to save updated JSON files.
+	*
+	* @param {object} client The original client from index.js. Only needed for sendMessage().
+	* @param {string} filePath The path to the file.
+	* @param {object} obj The object that the original file can be accessed with.
+	*/
+	saveFile: function (client, filePath, obj) {
+		fs.writeFile(filePath, JSON.stringify(obj, null, '\t'), err => {
 
 			// Checking for errors
 			if (err) throw err;
 
-			module.exports.log(null, 'Database saved.'); // Success
+			module.exports.log(client, filePath + ' saved.', 'important'); // Success
 		});
 	},
 	/*

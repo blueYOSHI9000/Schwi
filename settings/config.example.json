@@ -1,0 +1,22 @@
+{
+	"___comment": "Check config.docs.json for explanations of all entries here.",
+	"bot": {
+		"owners": ["<user ID>", "<second user ID>"],
+		"prefix": "schwi.",
+		"status": "online",
+		"activityType": "listening",
+		"activityName": "schwi.help",
+		"activityURL": ""
+	},
+	"rss": {
+		"interval": 30
+	},
+	"log": {
+		"level": "info",
+		"discordLogOutput": false,
+		"discordLogChannels": "<channel ID>"
+	},
+	"fixed": {
+		"configJSONVersion": 1
+	}
+}

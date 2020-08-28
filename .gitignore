@@ -2,3 +2,7 @@
 token.json
 /node_modules
 /daemon
+
+/settings/config.json
+/settings/token.json
+/settings/database.json

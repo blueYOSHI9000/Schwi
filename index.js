@@ -4,18 +4,20 @@ const path = require('path');
 const misc = require('./misc.js');
 const rss = require('./rss.js');
 
-const config = require('./config.json');
-const {token} = require('./token.json');
+const config = require('./settings/config.json');
+const {token} = require('./settings/token.json');
+const db = require('./settings/database.json');
 
 const client = new CommandoClient({
-	commandPrefix: 'schwi.',
-	owner: '183281735700578304',
+	commandPrefix: config.bot.prefix,
+	owner: config.bot.owners,
 });
 
 client.registry
 	.registerDefaultTypes()
 	.registerGroups([
 		['rss', 'RSS Commands'],
+		['owner', 'Bot-Owner commands'],
 	])
 	.registerDefaultGroups()
 	.registerDefaultCommands()
@@ -23,11 +25,26 @@ client.registry
 
 
 client.once('ready', () => {
-	misc.log(client, `Logged in as ${client.user.tag}! (${client.user.id})`);
-	client.user.setActivity('with Commando');
+	misc.log(client, `Logged in as ${client.user.tag}! (${client.user.id})`, 'important');
+
+	client.user.setPresence({
+		status: config.bot.status,
+		activity: {
+			name: config.bot.activityName,
+			type: config.bot.activityType.toUpperCase(),
+			url: config.bot.activityURL
+		}
+	});
+
+	console.log(rss.findFeedByChannel('711338977419853835'));
+
+	var interval = config.rss.interval; //make sure interval is at least 10 minutes
+	if (interval < 10) {
+		interval = 10;
+	}
 
 	rss.parseAllFeeds(client);
-	setInterval(rss.parseAllFeeds, config.interval * 60000); //convert minutes to milliseconds
+	setInterval(rss.parseAllFeeds, interval * 60000); //convert minutes to milliseconds
 });
 
 client.on('error', console.error);
