@@ -25,18 +25,17 @@ client.registry
 
 
 client.once('ready', () => {
-	misc.log(client, `Logged in as ${client.user.tag}! (${client.user.id})`, 'important');
+	misc.log(client, `Logged in as ${client.user.tag}! (${client.user.id})`, 'info');
 
 	client.user.setPresence({
 		status: config.bot.status,
 		activity: {
 			name: config.bot.activityName,
-			type: config.bot.activityType.toUpperCase(),
-			url: config.bot.activityURL
+			type: config.bot.activityType.toUpperCase()
 		}
-	});
-
-	console.log(rss.findFeedByChannel('711338977419853835'));
+	})
+	.then(misc.log(client, 'Activity updated to "' + config.bot.activityType + ' ' + config.bot.activityName + '" on boot.', 'spamInfo'))
+	.catch(console.error);
 
 	var interval = config.rss.interval; //make sure interval is at least 10 minutes
 	if (interval < 10) {

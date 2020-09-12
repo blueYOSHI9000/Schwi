@@ -3,7 +3,6 @@ const { Command } = require('discord.js-commando');
 const misc = require('../../misc.js');
 
 const config = require('../../settings/config.json');
-const db = require('../../settings/database.json');
 
 module.exports = class AddCommand extends Command {
 	constructor(client) {
@@ -19,7 +18,7 @@ module.exports = class AddCommand extends Command {
 					key: 'activityType',
 					prompt: 'No activity type has been entered. Please enter a activity type now. It can be "PLAYING", "WATCHING", "LISTENING" or "STREAMING".',
 					type: 'string',
-					oneOf: ['PLAYING', 'WATCHING', 'LISTENING', 'STREAMING'],
+					//oneOf: ['PLAYING', 'WATCHING', 'LISTENING', 'STREAMING'], //doesn't seem to work
 				},
 				{
 					key: 'activityName',
@@ -33,7 +32,17 @@ module.exports = class AddCommand extends Command {
 	run(message, {activityType, activityName}) {
 		activityType = activityType.toUpperCase();
 
-		this.client.user.setActivity(activityName, {type: activityType, url: config.bot.activityURL});
+		switch (activityType) {
+			case 'PLAYING':
+			case 'WATCHING':
+			case 'LISTENING':
+			case 'STREAMING':
+				break;
+			default:
+				return message.say('Activity type "' + activityType + '" was not valid. Please enter one of the following options: `PLAYING`, `WATCHING`, `LISTENING`, `STREAMING`');
+		}
+
+		this.client.user.setActivity(activityName, {type: activityType});
 
 		var output = 'Set bot activity to ' + activityType + ' ' + activityName;
 

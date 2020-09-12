@@ -3,7 +3,6 @@ const { Command } = require('discord.js-commando');
 const misc = require('../../misc.js');
 
 const config = require('../../settings/config.json');
-const db = require('../../settings/database.json');
 
 module.exports = class AddCommand extends Command {
 	constructor(client) {

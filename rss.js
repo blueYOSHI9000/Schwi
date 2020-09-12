@@ -21,10 +21,21 @@ module.exports = {
 
 			var lastChecked = Date.now() - 5000; //-5s so it doesn't hit the interval cooldown
 
-			var feeds = db.g431975254525739008.rss.feeds;
+			var feeds = db.feeds;
 			for (var num = 0; num < feeds.length; num++) {
-				await module.exports.parseFeed(client, feeds[num]);
-				await misc.sleep(5000); //sleep for 5s to not spam
+				try {
+					await module.exports.parseFeed(client, feeds[num]);
+					//mark feed as available
+					db.feeds[num].unavailable = false;
+				} catch (e) {
+					//pass the unavailable variable as the cliOnly one so discord doesn't get spammed with 'feed unavailable' messages
+					misc.log(client, 'Could not parse ' + feeds[num].name + '.', 'warn', db.feeds[num].unavailable);
+					misc.log(client, e, 'warn', true);
+
+					//mark feed as unavailable
+					db.feeds[num].unavailable = true;
+				}
+				await misc.sleep(config.rss.scanDelay); //delay next scan as to not spam sites
 			}
 
 			db.general.rss.lastChecked = lastChecked;
@@ -39,12 +50,12 @@ module.exports = {
 	* An entry is determined to be new if it's been published after the bot checked last.
 	*
 	* @param {object} client The original client from index.js. Required for sendMessage().
-	* @param {object} feedObj The feed's object from the database (*guild* > rss > feeds > *feed*).
+	* @param {object} feedObj The feed's object from the database (feeds > *feed*).
 	*/
 	parseFeed: async function (client, feedObj) {
-		var url = feedObj.url;
-		var channel = feedObj.channel;
 		var name = feedObj.name;
+		var url = feedObj.url;
+		var channels = feedObj.channels;
 
 		misc.log(client, 'Parsing ' + name + '...', 'spamInfo');
 
@@ -63,15 +74,30 @@ module.exports = {
 			}
 		}
 
-		if (result.length > 0) {
-			misc.sendMessage(client, channel, ':newspaper: | **' + result[0].title + '**\n\n' + result[0].link);
-		}
-		if (result.length === 2) {
-			misc.sendMessage(client, channel, ':newspaper: | **' + result[1].title + '**\n\n' + result[1].link);
-		} else if (result.length > 2) {
-			misc.sendMessage(client, channel, '...and ' + (parseInt(result.length) - 1) + ' more entries from **' + name + '**: ' + url);
-		}
+		module.exports.postFeeds(client, result, channels, url);
+
 		misc.log(client, 'Finished parsing ' + name + '.', 'spamInfo');
+	},
+	/*
+	* Parses a single feed and posts new entries.
+	* An entry is determined to be new if it's been published after the bot checked last.
+	*
+	* @param {object} client The original client from index.js. Required for sendMessage().
+	* @param {array} items Array of all new feed items to post.
+	* @param {array} channels The 'channels' array from the feed in the database.
+	* @param {string} url The URL for the feed.
+	*/
+	postFeeds: async function (client, items, channels, url) {
+		for (var num = 0; num < channels.length; num++) {
+			if (items.length > 0) {
+				misc.sendMessage(client, channels[num].channelID, ':newspaper: | **' + items[0].title + '**\n\n' + items[0].link);
+			}
+			if (items.length === 2) {
+				misc.sendMessage(client, channels[num].channelID, ':newspaper: | **' + items[1].title + '**\n\n' + items[1].link);
+			} else if (items.length > 2) {
+				misc.sendMessage(client, channels[num].channelID, '...and ' + (parseInt(items.length) - 1) + ' more entries from **' + channels[num].feedName + '**: ' + url);
+			}
+		}
 	},
 	/*
 	* Finds all RSS feeds with a certain name.
@@ -110,18 +136,16 @@ module.exports = {
 	* @param {string} url The url of the feed to find.
 	*/
 	findFeedByURL: function (url) {
-		var feeds = db.g431975254525739008.rss.feeds;
-		var results = [];
+		var feeds = db.feeds;
 
 		if (url) {
 			for (var num = 0; num < feeds.length; num++) {
 				if (url === feeds[num].url) {
-					results.push(feeds[num]);
+					return feeds[num]
 				}
 			}
 		}
-
-		return results;
+		return null;
 	},
 	/*
 	* Finds all RSS feeds that post in a certain channel.

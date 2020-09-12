@@ -18,6 +18,7 @@ module.exports = {
 	log: function (client, text, level, cliOnly) {
 		level = module.exports.logLevelToNum(level);
 		var configLevel = module.exports.logLevelToNum(config.log.level);
+		var discordLogLevelOverwrite = module.exports.logLevelToNum(config.log.discordLogLevelOverwrite);
 
 		if (level < configLevel) {
 			return;
@@ -31,14 +32,22 @@ module.exports = {
 
 		console.log(text);
 
-		//check if client is actually a client - check if log level is important or higher - check if it's not CLI only - check if discord logs are allowed in config.json
-		if (typeof client === 'object' && client != null && level >= 3 && cliOnly != true && config.bot.discordLogOutput === true) {
-			module.exports.sendMessage(client, '748143884911116328', text);
+		if (typeof client === 'object' && client != null) { //check if client is actually a client
+			if (cliOnly != true) { //check that it's not CLI only
+				if (level >= 3) { //check if log level is info or higher
+					if (config.log.discordLogOutput === true) { //check in config.json if discord logs are allowed
+						if (discordLogLevelOverwrite === null || discordLogLevelOverwrite <= level) { //check if discordLogLevelOverwrite is used and compare the level against it
+							module.exports.sendMessage(client, config.log.discordLogChannel, text);
+						}
+					}
+				}
+			}
 		}
 	},
 	/*
 	* Transform a log level string into a number for easy comparing (like only do x if log level is important or higher).
 	* Numbers shouldn't be used directly so more levels can be easily added if necessary.
+	* Returns null if it couldn't transform the level.
 	*
 	* @param {string} level Level of importance, can be "debug" > "spamInfo" > "info" > "important".
 	*/
@@ -53,9 +62,11 @@ module.exports = {
 			case 'info': //useful info like when RSS feeds get parsed but not too spammy like posting every single RSS feed being parsed
 				level = 3;
 				break;
-			case 'important':
+			case 'warn':
 				level = 4;
 				break;
+			default:
+				return null;
 		}
 		return level;
 	},
@@ -90,7 +101,7 @@ module.exports = {
 			// Checking for errors
 			if (err) throw err;
 
-			module.exports.log(client, filePath + ' saved.', 'important'); // Success
+			module.exports.log(client, filePath + ' saved.', 'info'); // Success
 		});
 	},
 	/*

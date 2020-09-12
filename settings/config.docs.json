@@ -5,15 +5,17 @@
 		"status": "online",//the status the bot should use, can be "online", "idle", "dnd" (do not disturb) or "invisible".
 		"activityType": "listening",//the activity type the bot should use, can be "PLAYING", "WATCHING", "LISTENING" or "STREAMING".
 		"activityName": "schwi.help",//the activity name the bot should use.
-		"activityURL": ""//the stream URL in case the "STREAMING" activity type is used. Can only be Twitch or YouTube links.
+		"activityURL": ""//---currently unused due to issues with it--- the stream URL in case the "STREAMING" activity type is used. Can only be Twitch or YouTube links.
 	},
 	"rss": {
-		"interval": 30//the interval in which the bot checks for new articles - time is in minutes - must be at least 10
+		"interval": 30,//the interval in which the bot checks for new articles - time is in minutes - must be at least 10
+		"scanDelay": 1000//delay between feed scans - time is in milliseconds
 	},
 	"log": {
-		"level": "info",//what level should be output, can be one of the following: "debug" > "spamInfo" > "info"  > "important" > "silent" -- "spamInfo" is basically the same as "info" except a lot more spammy at times, will post every single feed being parsed along other things
-		"discordLogOutput": false,//if logs should be outputted to discord as well (note: will not output spamInfo and below)
-		"discordLogChannels": "<channel ID>"//the channel the logs should be posted to
+		"level": "info",//what level should be output, can be one of the following: "debug" > "spamInfo" > "info"  > "warn" > "silent" -- "spamInfo" is basically the same as "info" except a lot more spammy at times, will post every single feed being parsed along other things
+		"discordLogOutput": false,//if logs should be output to discord as well (note: will not output spamInfo and below)
+		"discordLogChannel": "<channel ID>",//the channel the logs should be posted to
+		"discordLogLevelOverwrite": ""//overwrites the log level for discord logs - will not accept spamInfo and below - leave empty if normal log level should be used.
 	},
 	"fixed": { //do not change anything in here - this is only for the bot itself
 		"configJSONVersion": 1

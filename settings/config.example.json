@@ -9,12 +9,14 @@
 		"activityURL": ""
 	},
 	"rss": {
-		"interval": 30
+		"interval": 30,
+		"scanDelay": 1000
 	},
 	"log": {
 		"level": "info",
 		"discordLogOutput": false,
-		"discordLogChannels": "<channel ID>"
+		"discordLogChannel": "<channel ID>",
+		"discordLogLevelOverwrite": ""
 	},
 	"fixed": {
 		"configJSONVersion": 1
