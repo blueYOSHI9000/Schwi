@@ -25,7 +25,7 @@ client.registry
 
 
 client.once('ready', () => {
-	misc.log(client, `Logged in as ${client.user.tag}! (${client.user.id})`, 'info');
+	misc.log(client, 'info', `Logged in as ${client.user.tag}! (${client.user.id})`);
 
 	client.user.setPresence({
 		status: config.bot.status,
@@ -34,7 +34,7 @@ client.once('ready', () => {
 			type: config.bot.activityType.toUpperCase()
 		}
 	})
-	.then(misc.log(client, 'Activity updated to "' + config.bot.activityType + ' ' + config.bot.activityName + '" on boot.', 'spamInfo'))
+	.then(misc.log(client, 'spamInfo', 'Activity updated to "' + config.bot.activityType + ' ' + config.bot.activityName + '" on boot.'))
 	.catch(console.error);
 
 	var interval = config.rss.interval; //make sure interval is at least 10 minutes

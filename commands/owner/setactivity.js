@@ -46,7 +46,7 @@ module.exports = class AddCommand extends Command {
 
 		var output = 'Set bot activity to ' + activityType + ' ' + activityName;
 
-		misc.log(this.client, output, 'info', true);
+		misc.log(this.client, 'info', output, true);
 
 		config.bot.activityType = activityType;
 		config.bot.activityName = activityName;

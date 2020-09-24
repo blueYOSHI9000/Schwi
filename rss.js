@@ -17,7 +17,7 @@ module.exports = {
 	*/
 	parseAllFeeds: async function (client) {
 		if (Date.now() > db.general.rss.lastChecked + 1800000) {
-			misc.log(client, 'Start parsing all RSS feeds...', 'info');
+			misc.log(client, 'info', 'Start parsing all RSS feeds...');
 
 			var lastChecked = Date.now() - 5000; //-5s so it doesn't hit the interval cooldown
 
@@ -29,8 +29,8 @@ module.exports = {
 					db.feeds[num].unavailable = false;
 				} catch (e) {
 					//pass the unavailable variable as the cliOnly one so discord doesn't get spammed with 'feed unavailable' messages
-					misc.log(client, 'Could not parse ' + feeds[num].name + '.', 'warn', db.feeds[num].unavailable);
-					misc.log(client, e, 'warn', true);
+					misc.log(client, 'warn', 'Could not parse ' + feeds[num].name + '.', db.feeds[num].unavailable);
+					misc.log(client, 'warn', '', true, e);
 
 					//mark feed as unavailable
 					db.feeds[num].unavailable = true;
@@ -40,9 +40,9 @@ module.exports = {
 
 			db.general.rss.lastChecked = lastChecked;
 			misc.saveDB();
-			misc.log(client, 'All RSS feeds have been parsed. Last checked date has been updated to ' + new Date(Date.now()).toISOString() + '.', 'info');
+			misc.log(client, 'info', 'All RSS feeds have been parsed. Last checked date has been updated to ' + new Date(Date.now()).toISOString() + '.');
 		} else {
-			misc.log(client, 'Skipped parsing RSS feeds as ' + config.rss.interval + 'min haven\'t passed yet.', 'info');
+			misc.log(client, 'info', 'Skipped parsing RSS feeds as ' + config.rss.interval + 'min haven\'t passed yet.');
 		}
 	},
 	/*
@@ -57,7 +57,7 @@ module.exports = {
 		var url = feedObj.url;
 		var channels = feedObj.channels;
 
-		misc.log(client, 'Parsing ' + name + '...', 'spamInfo');
+		misc.log(client, 'spamInfo', 'Parsing ' + name + '...');
 
 		var feed = await parser.parseURL(url);
 
@@ -65,9 +65,11 @@ module.exports = {
 
 		for (var num = 0; num < feed.items.length; num++) {
 			var item = feed.items[num];
+			//misc.log(client, 'debug', '', true, item);
 
-			//console.log('pubDate: ' + Date.parse(item.pubDate));
-			//console.log('lastChe: ' + db.general.rss.lastChecked);
+			//misc.log(client, 'debug', 'pubDate: ' + Date.parse(item.pubDate));
+			//misc.log(client, 'debug', 'lastChe: ' + db.general.rss.lastChecked);
+			//misc.log(client, 'debug', Date.parse(item.pubDate) > db.general.rss.lastChecked);
 
 			if (Date.parse(item.pubDate) > db.general.rss.lastChecked) {
 				result.push(item);
@@ -76,7 +78,7 @@ module.exports = {
 
 		module.exports.postFeeds(client, result, channels, url);
 
-		misc.log(client, 'Finished parsing ' + name + '.', 'spamInfo');
+		misc.log(client, 'spamInfo', 'Finished parsing ' + name + '.');
 	},
 	/*
 	* Parses a single feed and posts new entries.
@@ -88,6 +90,7 @@ module.exports = {
 	* @param {string} url The URL for the feed.
 	*/
 	postFeeds: async function (client, items, channels, url) {
+		//misc.log(client, 'debug', '', true, channels);
 		for (var num = 0; num < channels.length; num++) {
 			if (items.length > 0) {
 				misc.sendMessage(client, channels[num].channelID, ':newspaper: | **' + items[0].title + '**\n\n' + items[0].link);

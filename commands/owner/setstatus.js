@@ -29,7 +29,7 @@ module.exports = class AddCommand extends Command {
 
 		var output = 'Set bot status to ' + status;
 
-		misc.log(this.client, output, 'info', true);
+		misc.log(this.client, 'info', output, true);
 
 		config.bot.status = status;
 		misc.saveConfig(this.client);

@@ -11,16 +11,22 @@ module.exports = {
 	* Log something to both console and to a discord channel (currently hardcoded).
 	*
 	* @param {object} client The original client from index.js.
-	* @param {string} text The text that should be logged.
 	* @param {string} level Level of importance, check logLevelToNum() for available levels.
+	* @param {string} text The text that should be logged.
 	* @param {boolean} cliOnly If it should only be logged to commandline.
+	* @param {anything} passthrough If this exists it will simply pass this through to the commandline. This won't be sent to discord regardless of cliOnly or level.
 	*/
-	log: function (client, text, level, cliOnly) {
+	log: function (client, level, text, cliOnly, passthrough) {
 		level = module.exports.logLevelToNum(level);
 		var configLevel = module.exports.logLevelToNum(config.log.level);
 		var discordLogLevelOverwrite = module.exports.logLevelToNum(config.log.discordLogLevelOverwrite);
 
 		if (level < configLevel) {
+			return;
+		}
+
+		if (passthrough != undefined) {
+			console.log(passthrough);
 			return;
 		}
 
@@ -101,7 +107,7 @@ module.exports = {
 			// Checking for errors
 			if (err) throw err;
 
-			module.exports.log(client, filePath + ' saved.', 'info'); // Success
+			module.exports.log(client, 'info', filePath + ' saved.'); // Success
 		});
 	},
 	/*

@@ -41,7 +41,7 @@ module.exports = class AddCommand extends Command {
 		var feed = rss.findFeedByURL(url);
 		var channelID = channel.id;
 
-		if (feed == '') { //if feed is empty then the url hasn't been added to the DB yet
+		if (feed == '' || feed === null) { //if feed is empty then the url hasn't been added to the DB yet
 			var tempFeed = {
 				name: name, //todo: get this name from rss feed
 				url: url,
@@ -71,7 +71,7 @@ module.exports = class AddCommand extends Command {
 		}
 
 		var output = 'Added **' + name + '** to <#' + channelID + '>.';
-		misc.log(this.client, output, 'info', true);
+		misc.log(this.client, 'info', output, true);
 
 		misc.saveDB(this.client);
 
