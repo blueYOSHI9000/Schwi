@@ -7,5 +7,5 @@ __pycache__/
 /settings/config.json
 /settings/token.json
 /settings/database.json
-/settings/log.txt
+settings/log.txt
 log.txt
