@@ -1,0 +1,1 @@
+This file can simply be empty, the bot will figure out what to do with it as long as a file called 'log.txt' exists. What's inside doesn't matter.
