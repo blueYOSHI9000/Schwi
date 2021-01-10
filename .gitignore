@@ -8,3 +8,5 @@ __pycache__/
 /settings/token.json
 /settings/database.json
 /settings/log.txt
+/run_on_startup/windows_run_on_startup.bat
+/run_on_startup/SchwiRSS.vbs

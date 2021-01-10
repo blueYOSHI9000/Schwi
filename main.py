@@ -25,8 +25,7 @@ bot = commands.Bot(
     case_insensitive=True
 )
 
-cogs = ['cogs.basic']
-cogs = ['cogs.owner']
+cogs = ['cogs.basic', 'cogs.owner']
 
 @bot.event
 async def on_ready():
