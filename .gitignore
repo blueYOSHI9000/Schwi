@@ -2,7 +2,9 @@
 token.json
 /node_modules
 /daemon
+__pycache__/
 
 /settings/config.json
 /settings/token.json
 /settings/database.json
+/settings/log.txt

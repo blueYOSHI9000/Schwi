@@ -1,3 +1,3 @@
 #!/bin/bash
-node index.js
+python3 main.py
 exit

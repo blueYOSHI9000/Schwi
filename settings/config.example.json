@@ -16,7 +16,8 @@
 		"level": "info",
 		"discordLogOutput": false,
 		"discordLogChannel": "<channel ID>",
-		"discordLogLevelOverwrite": ""
+		"discordLogLevelOverwrite": "",
+		"logFileMaxLines": 200
 	},
 	"fixed": {
 		"configJSONVersion": 1

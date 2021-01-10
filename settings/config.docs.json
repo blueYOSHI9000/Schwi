@@ -15,7 +15,8 @@
 		"level": "info",//what level should be output, can be one of the following: "debug" > "spamInfo" > "info"  > "warn" > "silent" -- "spamInfo" is basically the same as "info" except a lot more spammy at times, will post every single feed being parsed along other things
 		"discordLogOutput": false,//if logs should be output to discord as well (note: will not output spamInfo and below)
 		"discordLogChannel": "<channel ID>",//the channel the logs should be posted to
-		"discordLogLevelOverwrite": ""//overwrites the log level for discord logs - will not accept spamInfo and below - leave empty if normal log level should be used.
+		"discordLogLevelOverwrite": "",//overwrites the log level for discord logs - will not accept spamInfo and below - leave empty if normal log level should be used.
+		"logFileMaxLines": 200//max numbers of lines allowed in the log.txt file - note: read/writing is not optimized so huge files could take a while to read/write to
 	},
 	"fixed": { //do not change anything in here - this is only for the bot itself
 		"configJSONVersion": 1
