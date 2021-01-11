@@ -19,7 +19,8 @@ The core file here is `SchwiRSS.vbs` which, if setup correctly, is found in Wind
 If the bot is run on startup with the instructions here then there won't be a visible window anywhere, so the only way to close it (without having to find the exact task) is via discord commands:
 - Use `schwi.kill` to shut it down
 - Use `schwi.restart` to restart it
-Note: Only owners can do this so make sure the correct owner ID was entered in condig.json.
+
+Note: Only owners can do this so make sure the correct owner ID was entered in config.json.
 Instead of using the `schwi.` prefix (or whatever prefix is used) it's also possible to simply @ the bot.
 
 Also, if the bot suddenly stopped responding, chances are it silently crashed (which hopefully never happens).
