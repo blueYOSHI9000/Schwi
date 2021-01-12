@@ -1,23 +1,43 @@
 # Install SchwiRSS
+## easy method
 - download the source code (either via git or just the .zip)
 - [Install python](https://www.python.org/downloads/)
 	- Should already be installed by default on linux
-- open commandline
-	- Windows: Press Win+R and enter 'cmd'
-- enter `py -m pip install discord` to install the discord.py library
-	- depending on how python installed it might be `python3` or `python` instead of `py`
-- you can now use `_windows_start.bat` or `_linux_start.bat`
-	- note: these default to using `py` on windows and `python3` on linux, you might have to manually edit these files if you installed python differently
+- open `windows_install.bat` or `linux_install.sh` inside the `_install` folder
+- done! you can now open `_windows_start.bat` or `_linux_start.sh` to start the bot
+	- if this didn't work, use the commandline method below
+
+## Commandline method
+- download the source code (either via git or just the .zip)
+- [Install python](https://www.python.org/downloads/)
+	- Should already be installed by default on linux
+- open commandline terminal
+	- Windows: Press Win+R and enter `cmd`
+	- Linux: Press Ctrl+Alt+T
+- move to the folder SchwiRSS is in
+	- copy the path SchwiRSS is in (something like `C:\Users\blueYOSHI\Documents\GitHub\SchwiRSS`)
+	- Windows/Linux: type `cd ` and insert the path (note: some Linux terminals use Ctrl+Shift+V to paste)
+		- final command should look something like this: `cd C:\Users\blueYOSHI\Documents\GitHub\SchwiRSS`
+- type `py -V` - if it outputs something like `Python 3.8.3` it's good (try installing python again if your version is lower - though it'll likely still work anyway)
+	- if it output nothing, something else or `Python 2.x.x` then try using a different command like `python -V` or `python3 -V`
+		- if none of these work then try installing python again
+	- Windows: if the command that worked is not `py` then `_windows_start.bat` has to be edited - simply open it in a text editor and replace `py` with whatever worked
+	- Linux: if the command that worked is not `python3` then `_linux_start.sh` has to be edited - simply open it in a text editor and replace `python3` with whatever worked
+- all subsequent mentions of `py` should be replaced with whatever worked for you (like `python` or `python3`)
+- enter `py -m pip install -r requirements.txt` to install all required libraries SchwiRSS needs
 
 This has only been tested on Windows, though it *should* work on other platforms as well.
 
 # Run SchwiRSS on startup
 ## Windows
+- open commandline (press Win+R, then enter `cmd`)
+- enter `py -V` - if it outputs something like `Python 3.8.3` it's good
+	- if that didn't work try entering `python -V` or `python3 -V`
 - go to the "run_on_startup" folder
 - rename `windows_run_on_startup.example.bat` to `windows_run_on_startup.bat` (it's suggested to duplicate the file first to keep the original)
 - open `windows_run_on_startup.bat` and fill in the path on the 6th line (it should point to the folder 'main.py' and this readme is in - note: the folder, NOT the file)
 	- the finished line would look something like this: `cd C:\Users\blueYOSHI\Documents\GitHub\SchwiRSS`
-	- depending on how python is installed you might have to edit the 'py' on the 8th line
+	- if the command that worked earlier was not `py -V` then it has to be replaced on the 8th line with whatever worked
 - rename `SchwiRSS.example.vbs` to `SchwiRSS.vbs` (it's suggested to duplicate the file first to keep the original)
 - open `SchwiRSS.vbs` and edit the path on the 5th line so it points to the `windows_run_on_startup.bat` file we edited earlier
 	- the finished line would look something like this: `WshShell.Run chr(34) & "C:\Users\blueYOSHI\Documents\GitHub\SchwiRSS\run_on_startup\windows_run_on_startup.bat" & Chr(34), 0`

@@ -3,6 +3,7 @@ token.json
 /node_modules
 /daemon
 __pycache__/
+/.venv
 
 /settings/config.json
 /settings/token.json

@@ -1,7 +1,7 @@
 {
 	"bot": {
 		"owners": ["<user ID>", "<second user ID>"],//User IDs that should get access to bot owner commands
-		"prefix": "schwi.",//the bots prefix
+		"prefix": ["schwi."],//the bots prefix, can be multiple
 		"status": "online",//the status the bot should use, can be "online", "idle", "dnd" (do not disturb) or "invisible".
 		"activityType": "listening",//the activity type the bot should use, can be "PLAYING", "WATCHING", "LISTENING" or "STREAMING".
 		"activityName": "schwi.help",//the activity name the bot should use.

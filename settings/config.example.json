@@ -2,7 +2,7 @@
 	"___comment": "Check config.docs.json for explanations of all entries here.",
 	"bot": {
 		"owners": ["<user ID>", "<second user ID>"],
-		"prefix": "schwi.",
+		"prefix": ["schwi."],
 		"status": "online",
 		"activityType": "listening",
 		"activityName": "schwi.help",
