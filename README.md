@@ -1,5 +1,3 @@
-**REMINDER TO SELF: DONT FORGET TO ADD THE CONFIG FILES TO THIS**
-
 # Install SchwiRSS
 ## easy method
 - download the source code (either via git or just the .zip)
@@ -45,16 +43,13 @@
 
 # Commands
 ## Basic commands
-+--------------------------------------------+---------------------------------------------------------------------------------------------------------+
 |   Command                                  |   Description                                                                                           |
 | :----------------------------------------: | :-----------------------------------------------------------------------------------------------------: |
 | `schwi.help [command]`                     | Displays the help command, optionally you can add a command on top so it displays help for that command |
 | `schwi.ping`                               | Check the bots ping                                                                                     |
 | `schwi.say <something>`                    | The bot says exactly what you want it to say                                                            |
-+--------------------------------------------+---------------------------------------------------------------------------------------------------------+
 
 ## Owner commands
-+--------------------------------------------+---------------------------------------------------------------------------------------------------------+
 |   Command                                  |   Description                                                                                           |
 | :----------------------------------------: | :-----------------------------------------------------------------------------------------------------: |
 | `schwi.shutdown`                           | Shuts the bot down                                                                                      |
@@ -62,7 +57,6 @@
 | `schwi.setstatus <status>`                 | Changes the online status of the bot (can be `online`, `idle`, `dnd` or `invisible`)                    |
 | `schwi.setactivity <type> <name>`          | Changes the bots activity (type can be `PLAYING`, `WATCHING`, `LISTENING`, `STREAMING`)                 |
 | `schwi.setpresence <status> <type> <name>` | Changes the bots presence (status & activity - see above), url has to be changed manually in the config |
-+--------------------------------------------+---------------------------------------------------------------------------------------------------------+
 
 # Run SchwiRSS on startup
 ## Windows
