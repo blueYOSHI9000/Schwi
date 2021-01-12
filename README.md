@@ -1,9 +1,23 @@
+# Install SchwiRSS
+- download the source code (either via git or just the .zip)
+- [Install python](https://www.python.org/downloads/)
+	- Should already be installed by default on linux
+- open commandline
+	- Windows: Press Win+R and enter 'cmd'
+- enter `py -m pip install discord` to install the discord.py library
+	- depending on how python installed it might be `python3` or `python` instead of `py`
+- you can now use `_windows_start.bat` or `_linux_start.bat`
+	- note: these default to using `py` on windows and `python3` on linux, you might have to manually edit these files if you installed python differently
+
+This has only been tested on Windows, though it *should* work on other platforms as well.
+
 # Run SchwiRSS on startup
 ## Windows
 - go to the "run_on_startup" folder
 - rename `windows_run_on_startup.example.bat` to `windows_run_on_startup.bat` (it's suggested to duplicate the file first to keep the original)
 - open `windows_run_on_startup.bat` and fill in the path on the 6th line (it should point to the folder 'main.py' and this readme is in - note: the folder, NOT the file)
 	- the finished line would look something like this: `cd C:\Users\blueYOSHI\Documents\GitHub\SchwiRSS`
+	- depending on how python is installed you might have to edit the 'py' on the 8th line
 - rename `SchwiRSS.example.vbs` to `SchwiRSS.vbs` (it's suggested to duplicate the file first to keep the original)
 - open `SchwiRSS.vbs` and edit the path on the 5th line so it points to the `windows_run_on_startup.bat` file we edited earlier
 	- the finished line would look something like this: `WshShell.Run chr(34) & "C:\Users\blueYOSHI\Documents\GitHub\SchwiRSS\run_on_startup\windows_run_on_startup.bat" & Chr(34), 0`

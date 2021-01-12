@@ -1,8 +1,7 @@
 from discord.ext import commands
 from datetime import datetime as d
-from scripts.misc import get_args
+from modules.misc import get_args
 
-# New - The Cog class must extend the commands.Cog class
 class Basic(commands.Cog):
     
     def __init__(self, bot):
@@ -36,7 +35,7 @@ class Basic(commands.Cog):
     )
     async def say_command(self, ctx):
         # get actual message
-        text = get_args(ctx)
+        text = get_args(ctx, combine=True)
         
         if text == '':
             await ctx.send(content='You need to specify the text!')

@@ -1,3 +1,5 @@
+import json
+
 def get_args(ctx, combine=False):
     """Splits a message into arguments.
 
@@ -12,7 +14,20 @@ def get_args(ctx, combine=False):
     alias_used = ctx.invoked_with
     args = msg[len(prefix_used) + len(alias_used):]
 
-    if combine:
+    if combine != True:
         args = args.split()
 
     return args
+
+def is_owner(user):
+    """return True if user is (one of) the owner(s) - otherwise return False
+
+    user (integer/string): user ID either as a number or as a string
+    """
+    owners = json.load(open('settings/config.json', 'r'))['bot']['owners']
+
+    print(repr(owners))
+    print(repr(str(user)))
+    print(str(user) in owners)
+
+    return str(user) in owners
