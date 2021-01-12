@@ -1,10 +1,13 @@
+**REMINDER TO SELF: DONT FORGET TO ADD THE CONFIG FILES TO THIS**
+
 # Install SchwiRSS
 ## easy method
 - download the source code (either via git or just the .zip)
 - [Install python](https://www.python.org/downloads/)
 	- Should already be installed by default on linux
 - open `windows_install.bat` or `linux_install.sh` inside the `_install` folder
-- done! you can now open `_windows_start.bat` or `_linux_start.sh` to start the bot
+- setup the bot (view below on how to do so)
+- done! you can now open `_windows_start.bat` or `_linux_start.sh` to start the bot once you set it up (view below)
 	- if this didn't work, use the commandline method below
 
 ## Commandline method
@@ -25,8 +28,41 @@
 	- Linux: if the command that worked is not `python3` then `_linux_start.sh` has to be edited - simply open it in a text editor and replace `python3` with whatever worked
 - all subsequent mentions of `py` should be replaced with whatever worked for you (like `python` or `python3`)
 - enter `py -m pip install -r requirements.txt` to install all required libraries SchwiRSS needs
+- setup the bot (view below on how to do so)
+- done! you can now use `py main.py` to start the bot in the terminal or use `_windows_start.bat`/`_linux_start.sh` once you set the bot up (view below)
 
-This has only been tested on Windows, though it *should* work on other platforms as well.
+# Setup SchwiRSS
+- go into the settings folder and rename all files to remove the `.example` in them (duplicating them first would be a good idea as well)
+	- the final folder should have the following files: `config.json`, `database.json`, `log.txt`, `token.json` alongside some others
+- [create a bot account and invite them to your server](https://discordpy.readthedocs.io/en/latest/discord.html)
+- enter the token you got from the previous step in `token.json`
+- open `config.json` in a text editor
+	- enter your user ID under `owners`
+		- you can get the user ID of someone by @ them on discord and putting a `\` before it
+			- `\@blueYOSHI#1333` would produce `<@183281735700578304>` when sent - the numbers in it are the user ID (`183281735700578304`)
+	- change any other options if you'd like to, what each option does is described in `config.docs.json`
+- done! `database.json` or `log.txt` should not be edited manually, the bot does that automatically
+
+# Commands
+## Basic commands
++--------------------------------------------+---------------------------------------------------------------------------------------------------------+
+|   Command                                  |   Description                                                                                           |
+| :----------------------------------------: | :-----------------------------------------------------------------------------------------------------: |
+| `schwi.help [command]`                     | Displays the help command, optionally you can add a command on top so it displays help for that command |
+| `schwi.ping`                               | Check the bots ping                                                                                     |
+| `schwi.say <something>`                    | The bot says exactly what you want it to say                                                            |
++--------------------------------------------+---------------------------------------------------------------------------------------------------------+
+
+## Owner commands
++--------------------------------------------+---------------------------------------------------------------------------------------------------------+
+|   Command                                  |   Description                                                                                           |
+| :----------------------------------------: | :-----------------------------------------------------------------------------------------------------: |
+| `schwi.shutdown`                           | Shuts the bot down                                                                                      |
+| `schwi.reboot`                             | Restarts the bot                                                                                        |
+| `schwi.setstatus <status>`                 | Changes the online status of the bot (can be `online`, `idle`, `dnd` or `invisible`)                    |
+| `schwi.setactivity <type> <name>`          | Changes the bots activity (type can be `PLAYING`, `WATCHING`, `LISTENING`, `STREAMING`)                 |
+| `schwi.setpresence <status> <type> <name>` | Changes the bots presence (status & activity - see above), url has to be changed manually in the config |
++--------------------------------------------+---------------------------------------------------------------------------------------------------------+
 
 # Run SchwiRSS on startup
 ## Windows
