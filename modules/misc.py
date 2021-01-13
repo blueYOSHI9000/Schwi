@@ -26,8 +26,4 @@ def is_owner(user):
     """
     owners = json.load(open('settings/config.json', 'r'))['bot']['owners']
 
-    print(repr(owners))
-    print(repr(str(user)))
-    print(str(user) in owners)
-
     return str(user) in owners

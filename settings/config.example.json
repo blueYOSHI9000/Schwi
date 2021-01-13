@@ -10,13 +10,18 @@
 	},
 	"rss": {
 		"interval": 30,
-		"scanDelay": 1000
+		"scanDelay": 1000,
+		"postDelay": 500,
+        "combinePosts": 1,
+        "oldestFirst": true,
+        "dateFormat": "%a %d %b %Y at %I:%M%p"
 	},
 	"log": {
 		"level": "info",
 		"discordLogOutput": false,
 		"discordLogChannel": "<channel ID>",
 		"discordLogLevelOverwrite": "",
+        "logTimeOnDiscord": false,
 		"logFileMaxLines": 200
 	},
 	"fixed": {

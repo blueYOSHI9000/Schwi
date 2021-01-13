@@ -1,12 +1,16 @@
-import json
 import discord
 from discord.ext import commands
-import logging
-import modules.activity as activity
+from discord.ext.tasks import loop
 
+import logging
 #discord.py logging - not my own
 logging.basicConfig(level=logging.WARNING)
 
+import json
+import time
+
+import modules.activity as activity
+import modules.rss as rss
 from modules.log import log
 
 config = json.load(open('settings/config.json', 'r'))
@@ -42,6 +46,19 @@ async def on_ready():
     #load all bot commands
     for cog in cogs:
         bot.load_extension(cog)
+
+    await set_interval()
     return
+
+interval = config['rss']['interval'] * 60
+# make sure interval is bigger than 10min
+if interval < 600:
+    interval = 600
+
+
+@loop(seconds=interval)
+async def set_interval():
+    await rss.scan_all_feeds(client=bot)
+
 
 bot.run(token, bot=True, reconnect=True)

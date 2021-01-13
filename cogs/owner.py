@@ -23,9 +23,11 @@ class Owner(commands.Cog):
     )
     async def shutdown_command(self, ctx):
         author_ID = ctx.message.author.id
+        user = ctx.message.author.name + '#' + ctx.message.author.discriminator
+
         if not is_owner(author_ID):
             await ctx.send(content=f"<@!{author_ID}> Owner commands can only be executed by owners.")
-            await log('Owner command cannot be executed by non-owners.', 'warn', client=self.bot)
+            await log(f'Owner command cannot be executed by non-owners. (schwi.shutdown used by {user}', 'warn', client=self.bot)
             return
 
         user = f'{ctx.message.author.name}#{ctx.message.author.discriminator}'
@@ -47,9 +49,11 @@ class Owner(commands.Cog):
     )
     async def restart_command(self, ctx):
         author_ID = ctx.message.author.id
+        user = ctx.message.author.name + '#' + ctx.message.author.discriminator
+
         if not is_owner(author_ID):
             await ctx.send(content=f"<@!{author_ID}> Owner commands can only be executed by owners.")
-            await log('Owner command cannot be executed by non-owners.', 'warn', client=self.bot)
+            await log(f'Owner command cannot be executed by non-owners. (schwi.reboot used by {user})', 'warn', client=self.bot)
             return
 
         user = f'{ctx.message.author.name}#{ctx.message.author.discriminator}'
@@ -72,9 +76,11 @@ class Owner(commands.Cog):
     )
     async def setstatus_command(self, ctx):
         author_ID = str(ctx.message.author.id)
+        user = ctx.message.author.name + '#' + ctx.message.author.discriminator
+
         if not is_owner(author_ID):
             await ctx.send(content=f"<@!{author_ID}> Owner commands can only be executed by owners.")
-            await log('Owner command cannot be executed by non-owners.', 'warn', client=self.bot)
+            await log(f'Owner command cannot be executed by non-owners. (schwi.setstatus used by {user}', 'warn', client=self.bot)
             return
 
         args = get_args(ctx)
@@ -82,6 +88,8 @@ class Owner(commands.Cog):
 
         if status in ('online', 'idle', 'dnd', 'invisible'):
             await activity.change_activity(status=status, client=self.bot)
+
+            await log(f'Online status was updated to \'{status}\' by {user}', 'info', client=self.bot)
             await ctx.send(content=f"<@!{author_ID}> Status was updated to **{status}**! (Note: If it doesn't update it might've got rate-limited, try again in a couple minutes in that case.)")
         else:
             await ctx.send(content=f"<@!{author_ID}> **{status}** was not a valid argument. Please use one of the following: 'online', 'idle', 'dnd', 'invisible' (without the apostrophes).")
@@ -95,9 +103,11 @@ class Owner(commands.Cog):
     )
     async def setactivity_command(self, ctx):
         author_ID = str(ctx.message.author.id)
+        user = ctx.message.author.name + '#' + ctx.message.author.discriminator
+
         if not is_owner(author_ID):
             await ctx.send(content=f"<@!{author_ID}> Owner commands can only be executed by owners.")
-            await log('Owner command cannot be executed by non-owners.', 'warn', client=self.bot)
+            await log(f'Owner command cannot be executed by non-owners. (schwi.setactivity used by {user}', 'warn', client=self.bot)
             return
             
         args = get_args(ctx)
@@ -106,6 +116,8 @@ class Owner(commands.Cog):
 
         if atype in ('PLAYING', 'WATCHING', 'LISTENING', 'STREAMING'):
             await activity.change_activity(atype=atype, name=name, client=self.bot)
+
+            await log(f'Activity was updated to \'{atype} {name}\' by {user}', 'info', client=self.bot)
             await ctx.send(content=f"<@!{author_ID}> Activity was updated to **{atype} {name}**! (Note: If it doesn't update it might've got rate-limited, try again in a couple minutes in that case.)")
         else:
             await ctx.send(content=f"<@!{author_ID}> **{atype}** was not a valid argument. Please use one of the following: 'PLAYING', 'WATCHING', 'LISTENING', 'STREAMING' (without the apostrophes).")
@@ -119,9 +131,11 @@ class Owner(commands.Cog):
     )
     async def setpresence_command(self, ctx):
         author_ID = str(ctx.message.author.id)
+        user = ctx.message.author.name + '#' + ctx.message.author.discriminator
+
         if not is_owner(author_ID):
             await ctx.send(content=f"<@!{author_ID}> Owner commands can only be executed by owners.")
-            await log('Owner command cannot be executed by non-owners.', 'warn', client=self.bot)
+            await log(f'Owner command cannot be executed by non-owners. (schwi.setpresence used by {user}', 'warn', client=self.bot)
             return
             
         args = get_args(ctx)
@@ -138,6 +152,42 @@ class Owner(commands.Cog):
             return
 
         await activity.change_activity(status=status, atype=atype, name=name, client=self.bot)
+
+        await log(f'Presence was updated to \'{status} - {atype} {name}\' by {user}', 'info', client=self.bot)
+        await ctx.send(content=f"<@!{author_ID}> Presence was updated to **{status}** - **{atype} {name}**! (Note: If it doesn't update it might've got rate-limited, try again in a couple minutes in that case.)")
+        return
+
+    @commands.command(
+        name='setpresence',
+        description='Changes the bot\'s presence (online status & activity)',
+        aliases=['changepresence', 'updatepresence'],
+        usage='<status (can be \'online\', \'idle\', \'dnd\', \'invisible\')> <activity (can be \'PLAYING\', \'WATCHING\', \'LISTENING\', \'STREAMING\')> <activity name>'
+    )
+    async def setpresence_command(self, ctx):
+        author_ID = str(ctx.message.author.id)
+        user = ctx.message.author.name + '#' + ctx.message.author.discriminator
+
+        if not is_owner(author_ID):
+            await ctx.send(content=f"<@!{author_ID}> Owner commands can only be executed by owners.")
+            await log(f'Owner command cannot be executed by non-owners. (schwi.setpresence used by {user}', 'warn', client=self.bot)
+            return
+            
+        args = get_args(ctx)
+        status = args[0].lower()
+        atype = args[1].upper()
+        name = ' '.join(args[2:])
+
+        if (status not in ('online', 'idle', 'dnd', 'invisible')):
+            await ctx.send(content=f"<@!{author_ID}> **{status}** was not a valid argument. Please use one of the following: 'online', 'idle', 'dnd', 'invisible' (without the apostrophes).")
+            return
+
+        if (atype not in ('PLAYING', 'WATCHING', 'LISTENING', 'STREAMING')):
+            await ctx.send(content=f"<@!{author_ID}> **{atype}** was not a valid argument. Please use one of the following: 'PLAYING', 'WATCHING', 'LISTENING', 'STREAMING' (without the apostrophes).")
+            return
+
+        await activity.change_activity(status=status, atype=atype, name=name, client=self.bot)
+
+        await log(f'Presence was updated to \'{status} - {atype} {name}\' by {user}', 'info', client=self.bot)
         await ctx.send(content=f"<@!{author_ID}> Presence was updated to **{status}** - **{atype} {name}**! (Note: If it doesn't update it might've got rate-limited, try again in a couple minutes in that case.)")
         return
 
