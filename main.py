@@ -1,11 +1,12 @@
 import discord
-from discord.ext import commands
-from discord.ext.tasks import loop
+from discord.ext import tasks, commands
 
 import logging
 #discord.py logging - not my own
 logging.basicConfig(level=logging.WARNING)
 
+import threading
+import asyncio
 import json
 import time
 
@@ -47,7 +48,7 @@ async def on_ready():
     for cog in cogs:
         bot.load_extension(cog)
 
-    await set_interval()
+    background_task()
     return
 
 interval = config['rss']['interval'] * 60
@@ -55,10 +56,12 @@ interval = config['rss']['interval'] * 60
 if interval < 600:
     interval = 600
 
+class background_task(commands.Cog):
+    def __init__(self):
+        self.set_interval.start()
 
-@loop(seconds=interval)
-async def set_interval():
-    await rss.scan_all_feeds(client=bot)
-
+    @tasks.loop(seconds=interval)
+    async def set_interval(self):
+        await rss.scan_all_feeds(client=bot)
 
 bot.run(token, bot=True, reconnect=True)

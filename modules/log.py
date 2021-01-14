@@ -8,6 +8,11 @@ def log_level_to_num (level):
     """converts a log level string to a number
 
     strings are used instead of numbers directly so it's easier to read and also easier to add more levels in between old ones
+
+    Args:
+        level (string): the level in string form
+    Returns:
+        level in number form
     """
     if level == 'debug':
         return 1
@@ -86,6 +91,6 @@ async def log (text, level, *, client=False, discord_log=True, cli_log=True):
                 if (discord_log_level > 2 and level >= discord_log_level) or (discord_log_level == 2 and level >= log_level):
                     channel = client.get_channel(int(discord_log_channel))
                     if discord_log_time == True:
-                        await channel.send(f'[{time}] {text}')
+                        await channel.send(f'`[{time}]` {text}')
                     else:
                         await channel.send(text)

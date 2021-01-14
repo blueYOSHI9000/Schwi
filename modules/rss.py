@@ -9,6 +9,11 @@ from modules.log import log
 
 def scan_feed(url):
     """Simply scans a feed and returns it. Does NOT check whether
+
+    Args:
+        url (string): the url to scan
+    Returns:
+        The feedparser object incl. all feed items.
     """
     return feedparser.parse(url)
 
@@ -101,6 +106,11 @@ def get_embed_from_item(*, item, db_item, feed):
 
 
 async def scan_all_feeds(*, client):
+    """Scans all RSS feeds
+
+    Args:
+        client: the discord.py client object required for logging and posting new items
+    """
     await log('Start scanning all feeds.', 'info', client=client)
 
     with open('settings/database.json', 'r+') as f:

@@ -4,7 +4,10 @@ import time
 def ms_to_struct(ms):
     """Converts Unix time (milliseconds since epoch) to the time.struct_time.
 
-    ms (number): milliseconds since epoch,can be in string form since int() is used on it first
+    Args:
+        ms (number): milliseconds since epoch,can be in string form since int() is used on it first
+    Returns:
+        a time.struct_time object with the converted time
     """
     ms = int(ms)
     return time.gmtime(ms/1000.)
@@ -12,7 +15,10 @@ def ms_to_struct(ms):
 def struct_to_ms(struct):
     """Converts time.struct_time to Unix time (milliseconds since epoch)
 
-    struct (time.struct_time object): the time.struct_time object to be converted
+    Args:
+        struct (time.struct_time object): the time.struct_time object to be converted
+    Returns:
+        the converted time in milliseconds since epoch
     """
     # copied from several stackoverflow - comments are just what I assume happens
 
@@ -24,5 +30,10 @@ def struct_to_ms(struct):
     return (dt - epoch).total_seconds() * 1000.0
 
 def get_current_time():
+    """Gets current time as a time.struct_time object
+
+    Returns:
+        The current time as a time.struct_time object
+    """
     current = datetime.datetime.now()
     return current.timetuple()

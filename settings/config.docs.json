@@ -8,7 +8,7 @@
 		"activityURL": ""//---currently unused due to issues with it--- the stream URL in case the "STREAMING" activity type is used. Can only be Twitch or YouTube links.
 	},
 	"rss": {
-		"interval": 30,//the interval in which the bot checks for new articles - time is in minutes - must be at least 10
+		"interval": 30,//the interval in which the bot checks for new articles - time is in minutes - must be at least 10 -- requires a restart
 		"scanDelay": 1000,//delay between feed scans - time is in milliseconds
 		"postDelay": 500,//delay between feed posts - time is in milliseconds
         "combinePosts": 1,//If there are more posts than this from a single feed then all subsequent posts will get combined into one (if there are 3 new posts and this is set to 1 then the first will get posted normally, the rest gets combined into a "...and 2 more posts" - set to 0 to disable)
