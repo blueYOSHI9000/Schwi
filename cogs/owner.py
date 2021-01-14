@@ -24,22 +24,23 @@ class Owner(commands.Cog):
     async def shutdown_command(self, ctx):
         author_ID = ctx.message.author.id
         user = ctx.message.author.name + '#' + ctx.message.author.discriminator
+        prefix = json.load(open('settings/config.json', 'r'))['bot']['prefix'][0]
 
         if not is_owner(author_ID):
             await ctx.send(content=f"<@!{author_ID}> Owner commands can only be executed by owners.")
-            await log(f'Owner command cannot be executed by non-owners. (schwi.shutdown used by {user}', 'warn', client=self.bot)
+            await log(f'Owner command cannot be executed by non-owners. ({prefix}shutdown used by {user}', 'warn', client=self.bot)
             return
 
         user = f'{ctx.message.author.name}#{ctx.message.author.discriminator}'
 
         await ctx.send(content=f"<@!{author_ID}> Shutting down...")
 
-        await log(f'{user} used the command \'schwi.shutdown\'. Schwi is shutting down...', 'info', client=self.bot)
+        await log(f'{user} used the command \'{prefix}shutdown\'. Schwi is shutting down...', 'info', client=self.bot)
 
         # sleep for 1s so the log can be written to file in time
         time.sleep(1)
 
-        sys.exit('Script exited by using \'schwi.shutdown\'')
+        sys.exit(f'Script exited by using \'{prefix}shutdown\'')
         return
 
     @commands.command(
@@ -50,17 +51,18 @@ class Owner(commands.Cog):
     async def restart_command(self, ctx):
         author_ID = ctx.message.author.id
         user = ctx.message.author.name + '#' + ctx.message.author.discriminator
+        prefix = json.load(open('settings/config.json', 'r'))['bot']['prefix'][0]
 
         if not is_owner(author_ID):
             await ctx.send(content=f"<@!{author_ID}> Owner commands can only be executed by owners.")
-            await log(f'Owner command cannot be executed by non-owners. (schwi.reboot used by {user})', 'warn', client=self.bot)
+            await log(f'Owner command cannot be executed by non-owners. ({prefix}reboot used by {user})', 'warn', client=self.bot)
             return
 
         user = f'{ctx.message.author.name}#{ctx.message.author.discriminator}'
 
         await ctx.send(content=f"<@!{author_ID}> Rebooting...")
 
-        await log(f'{user} used the command \'schwi.reboot\'. Schwi is restarting...\n', 'info', client=self.bot)
+        await log(f'{user} used the command \'{prefix}reboot\'. Schwi is restarting...\n', 'info', client=self.bot)
 
         # sleep for 1s so the log can be written to file in time
         time.sleep(1)
@@ -77,10 +79,11 @@ class Owner(commands.Cog):
     async def setstatus_command(self, ctx):
         author_ID = str(ctx.message.author.id)
         user = ctx.message.author.name + '#' + ctx.message.author.discriminator
+        prefix = json.load(open('settings/config.json', 'r'))['bot']['prefix'][0]
 
         if not is_owner(author_ID):
             await ctx.send(content=f"<@!{author_ID}> Owner commands can only be executed by owners.")
-            await log(f'Owner command cannot be executed by non-owners. (schwi.setstatus used by {user}', 'warn', client=self.bot)
+            await log(f'Owner command cannot be executed by non-owners. ({prefix}setstatus used by {user}', 'warn', client=self.bot)
             return
 
         args = get_args(ctx)
@@ -107,7 +110,7 @@ class Owner(commands.Cog):
 
         if not is_owner(author_ID):
             await ctx.send(content=f"<@!{author_ID}> Owner commands can only be executed by owners.")
-            await log(f'Owner command cannot be executed by non-owners. (schwi.setactivity used by {user}', 'warn', client=self.bot)
+            await log(f'Owner command cannot be executed by non-owners. ({prefix}setactivity used by {user}', 'warn', client=self.bot)
             return
             
         args = get_args(ctx)
@@ -135,7 +138,7 @@ class Owner(commands.Cog):
 
         if not is_owner(author_ID):
             await ctx.send(content=f"<@!{author_ID}> Owner commands can only be executed by owners.")
-            await log(f'Owner command cannot be executed by non-owners. (schwi.setpresence used by {user}', 'warn', client=self.bot)
+            await log(f'Owner command cannot be executed by non-owners. ({prefix}setpresence used by {user}', 'warn', client=self.bot)
             return
             
         args = get_args(ctx)
@@ -169,7 +172,7 @@ class Owner(commands.Cog):
 
         if not is_owner(author_ID):
             await ctx.send(content=f"<@!{author_ID}> Owner commands can only be executed by owners.")
-            await log(f'Owner command cannot be executed by non-owners. (schwi.setpresence used by {user}', 'warn', client=self.bot)
+            await log(f'Owner command cannot be executed by non-owners. ({prefix}setpresence used by {user}', 'warn', client=self.bot)
             return
             
         args = get_args(ctx)

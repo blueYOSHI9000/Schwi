@@ -32,7 +32,7 @@ class Debug(commands.Cog):
 
         print(f'\n{ctx}\n\n==============================\n\n{ctx.message}')
 
-        #print(f'\n\n{dir(ctx.me)}\n\n')
+        #print(f'\n\n{dir(ctx.author)}\n\n')
         return
 
 

@@ -8,6 +8,9 @@
 		"activityName": "schwi.help",
 		"activityURL": ""
 	},
+    "permissions": {
+    	"editFeeds": "manage_channels"
+    },
 	"rss": {
 		"interval": 30,
 		"scanDelay": 1000,
