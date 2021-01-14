@@ -47,13 +47,14 @@ def get_new_items_from_feed(*, feed=False, url=False, last_checked):
 
     return final
 
-def get_embed_from_item(*, item, db_item, feed):
+def get_embed_from_item(*, item, db_item, feed, channel_item, client):
     """Creates an embed from an rss feed.
 
     Args:
         item: the rss feed item that should be used
         db_item: the corresponding feed in the database (used in case name & url can't be parsed)
         feed: the full rss feed, not just the item (used for thumbnail)
+        channel_item: the 'channels' item from the database, used to get 'guildID'
     Returns:
         discord.Embed object
     """
@@ -75,6 +76,9 @@ def get_embed_from_item(*, item, db_item, feed):
         embed['url'] = item.link
     else:
         embed['url'] = db_item['url']
+
+    embed['color'] = client.get_guild(int(channel_item['guildID'])).me.color
+
 
     embed = discord.Embed(**embed)
 
@@ -104,6 +108,20 @@ def get_embed_from_item(*, item, db_item, feed):
 
     return embed
 
+def already_checked(last_checked, interval, current_time=t.get_current_time()):
+    """Checks if feed has already scanned in the last interval.
+
+    Args:
+        last_checked (number): the time it has last been checked in ms since epoch
+        interval (number): the interval in seconds
+        current_time (time.time_struct object): overwrite the current time
+    """
+    # multiply interval by 1000 to convert from seconds to ms
+    # subtract 5s from interval to make sure that a scheduled scan doesn't hit it
+    last_checked = last_checked + (interval * 1000 - 5000)
+    last_checked = t.ms_to_struct(last_checked)
+
+    return last_checked > current_time
 
 async def scan_all_feeds(*, client):
     """Scans all RSS feeds
@@ -135,19 +153,25 @@ async def scan_all_feeds(*, client):
         if post_delay < 0:
             post_delay = 0
 
+        
+        current_time = t.get_current_time()
+
+        last_checked = database['general']['rss']['lastChecked']
+
+        # check if already scanned during the last interval
+        if already_checked(last_checked, interval, current_time):
+            await log(f' Skip scanning all feeds ({int(interval / 60)}min interval)..', 'info', client=client)
+            return
+
         # go through all feeds that have to be scanned
         # use range() because the original feeds variable has to be edited
         for i in range(len(feeds)):
             time.sleep(scan_delay)
 
-            current_time = t.get_current_time()
+            last_checked = feeds[i]['lastChecked']
 
-            # multiply interval by 1000 to convert from seconds to ms
-            # subtract 5s from interval to make sure that a scheduled scan doesn't hit it
-            last_checked_with_interval = feeds[i]['lastChecked'] + (interval * 1000 - 5000)
-            last_checked_with_interval = t.ms_to_struct(last_checked_with_interval)
-
-            if last_checked_with_interval > current_time:
+            # check if already scanned during the last interval
+            if already_checked(last_checked, interval, current_time):
                 await log(f' Skip scanning {feeds[i]["name"]} ({int(interval / 60)}min interval).', 'spamInfo', client=client)
                 continue
 
@@ -178,10 +202,10 @@ async def scan_all_feeds(*, client):
                 else:
                     first_item = results[0]
 
-                embed = get_embed_from_item(item=first_item, db_item=feeds[i], feed=feed)
-
                 for c in feeds[i]['channels']:
                     time.sleep(post_delay)
+
+                    embed = get_embed_from_item(item=first_item, db_item=feeds[i], feed=feed, channel_item=c, client=client)
 
                     channel = client.get_channel(int(c['channelID']))
                     await channel.send(embed=embed)
@@ -189,8 +213,6 @@ async def scan_all_feeds(*, client):
 
             # post all items
             else:
-                for r in range(len(results)):
-                    results[r] = get_embed_from_item(item=results[r], db_item=feeds[i], feed=feed)
 
                 # reverse the results list so the oldest items come first
                 if oldest_posts_first == True:
@@ -201,7 +223,8 @@ async def scan_all_feeds(*, client):
 
                     channel = client.get_channel(int(c['channelID']))
                     for r in results:
-                        await channel.send(embed=r)
+                        embed = get_embed_from_item(item=results[r], db_item=feeds[i], feed=feed, channel_item=c, client=client)
+                        await channel.send(embed=embed)
 
             feeds[i]['lastChecked'] = t.struct_to_ms(t.get_current_time())
             await log(f' Done scanning {feeds[i]["name"]}.', 'spamInfo', client=client)

@@ -1,3 +1,4 @@
+import discord
 from discord.ext import commands
 
 import json
@@ -30,6 +31,8 @@ class Debug(commands.Cog):
             return
 
         print(f'\n{ctx}\n\n==============================\n\n{ctx.message}')
+
+        #print(f'\n\n{dir(ctx.me)}\n\n')
         return
 
 

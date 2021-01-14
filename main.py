@@ -36,7 +36,7 @@ bot = commands.Bot(
 * .   *  ' .  * .  ' .  *  ' *  .  .  
 """
 
-cogs = ['cogs.basic', 'cogs.owner', 'cogs.debug']
+cogs = ['cogs.basic', 'cogs.feeds', 'cogs.owner', 'cogs.debug']
 
 @bot.event
 async def on_ready():

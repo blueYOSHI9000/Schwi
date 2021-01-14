@@ -7,7 +7,7 @@ def get_args(ctx, combine=False):
         message (class/obj): the ctx class/obj from inside a command function.
         combine (boolean): if true it combines all args into a single long argument - otherwise it gets split into multiple
     Returns:
-        Returns all arguments as a list
+        If combine==true then it returns a string - otherwise a list with all arguments
     """
     msg = ctx.message.content
 
