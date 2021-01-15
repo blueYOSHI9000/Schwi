@@ -77,7 +77,7 @@ def get_embed_from_item(*, item, db_item, feed, channel_item, client):
     else:
         embed['url'] = db_item['url']
 
-    embed['color'] = client.get_guild(int(channel_item['guildID'])).me.color
+    embed['color'] = get_embed_color(default_color=client.get_guild(channel_item['guildID']).me.color)
 
 
     embed = discord.Embed(**embed)
@@ -129,7 +129,6 @@ async def scan_all_feeds(*, client):
     Args:
         client: the discord.py client object required for logging and posting new items
     """
-    await log('Start scanning all feeds.', 'info', client=client)
 
     with open('settings/database.json', 'r+') as f:
         database = json.load(f)
@@ -156,12 +155,14 @@ async def scan_all_feeds(*, client):
         
         current_time = t.get_current_time()
 
-        last_checked = database['general']['rss']['lastChecked']
+        last_checked = database['general']['lastChecked']
 
         # check if already scanned during the last interval
         if already_checked(last_checked, interval, current_time):
             await log(f' Skip scanning all feeds ({int(interval / 60)}min interval)..', 'info', client=client)
             return
+
+        await log('Start scanning all feeds.', 'info', client=client)
 
         # go through all feeds that have to be scanned
         # use range() because the original feeds variable has to be edited
@@ -190,7 +191,7 @@ async def scan_all_feeds(*, client):
                     for c in feeds[i]['channels']:
                         time.sleep(post_delay)
 
-                        channel = client.get_channel(int(c['channelID']))
+                        channel = client.get_channel(c['channelID'])
                         await channel.send(f'**{c["feedName"]}** is not available (this message won\'t be posted again until it\'s available again). Feed URL: {feeds[i]["url"]}')
 
                 continue
@@ -207,7 +208,7 @@ async def scan_all_feeds(*, client):
 
                     embed = get_embed_from_item(item=first_item, db_item=feeds[i], feed=feed, channel_item=c, client=client)
 
-                    channel = client.get_channel(int(c['channelID']))
+                    channel = client.get_channel(c['channelID'])
                     await channel.send(embed=embed)
                     await channel.send(f'...and {len(results) - combine_posts} more from {c["feedName"]}.')
 
@@ -221,7 +222,7 @@ async def scan_all_feeds(*, client):
                 for c in feeds[i]['channels']:
                     time.sleep(post_delay)
 
-                    channel = client.get_channel(int(c['channelID']))
+                    channel = client.get_channel(c['channelID'])
                     for r in results:
                         embed = get_embed_from_item(item=results[r], db_item=feeds[i], feed=feed, channel_item=c, client=client)
                         await channel.send(embed=embed)
@@ -230,7 +231,7 @@ async def scan_all_feeds(*, client):
             await log(f' Done scanning {feeds[i]["name"]}.', 'spamInfo', client=client)
 
         database['feeds'] = feeds
-        database['general']['rss']['lastChecked'] = t.struct_to_ms(t.get_current_time())
+        database['general']['lastChecked'] = t.struct_to_ms(t.get_current_time())
         # reset file position to the beginning - stackoverflow copy, dont ask
         f.seek(0)
         json.dump(database, f, indent=4)

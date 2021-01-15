@@ -107,6 +107,7 @@ class Owner(commands.Cog):
     async def setactivity_command(self, ctx):
         author_ID = str(ctx.message.author.id)
         user = ctx.message.author.name + '#' + ctx.message.author.discriminator
+        prefix = json.load(open('settings/config.json', 'r'))['bot']['prefix'][0]
 
         if not is_owner(author_ID):
             await ctx.send(content=f"<@!{author_ID}> Owner commands can only be executed by owners.")
@@ -135,6 +136,7 @@ class Owner(commands.Cog):
     async def setpresence_command(self, ctx):
         author_ID = str(ctx.message.author.id)
         user = ctx.message.author.name + '#' + ctx.message.author.discriminator
+        prefix = json.load(open('settings/config.json', 'r'))['bot']['prefix'][0]
 
         if not is_owner(author_ID):
             await ctx.send(content=f"<@!{author_ID}> Owner commands can only be executed by owners.")
@@ -169,6 +171,7 @@ class Owner(commands.Cog):
     async def setpresence_command(self, ctx):
         author_ID = str(ctx.message.author.id)
         user = ctx.message.author.name + '#' + ctx.message.author.discriminator
+        prefix = json.load(open('settings/config.json', 'r'))['bot']['prefix'][0]
 
         if not is_owner(author_ID):
             await ctx.send(content=f"<@!{author_ID}> Owner commands can only be executed by owners.")
@@ -192,6 +195,42 @@ class Owner(commands.Cog):
 
         await log(f'Presence was updated to \'{status} - {atype} {name}\' by {user}', 'info', client=self.bot)
         await ctx.send(content=f"<@!{author_ID}> Presence was updated to **{status}** - **{atype} {name}**! (Note: If it doesn't update it might've got rate-limited, try again in a couple minutes in that case.)")
+        return
+
+    @commands.command(
+        name='delayscan',
+        description='Delays the next scan by the amount of hours specified',
+        usage='<hours>'
+    )
+    async def delayscan_command(self, ctx):
+        author_ID = str(ctx.message.author.id)
+        user = ctx.message.author.name + '#' + ctx.message.author.discriminator
+        prefix = json.load(open('settings/config.json', 'r'))['bot']['prefix'][0]
+
+        args = get_args(ctx)
+
+        try:
+            args[0]
+        except IndexError:
+            await ctx.send(content=f"<@!{author_ID}> Missing argument. Use `{prefix}delayscan <hours>`.")
+            return
+
+        if args[0].isdigit() == False:
+            await ctx.send(content=f"<@!{author_ID}> Invalid argument. Use `{prefix}delayscan <hours>`.")
+            return
+
+        args[0] = int(args[0])
+        
+        with open('settings/database.json', 'r+') as f:
+            database = json.load(f)
+            database['general']['lastChecked'] = database['general']['lastChecked'] + (args[0] * 3600000)
+
+            # reset file position to the beginning - stackoverflow copy, dont ask
+            f.seek(0)
+            json.dump(database, f, indent=4)
+            f.truncate()
+
+        await ctx.send(content=f"<@!{author_ID}> Next scan successfully delayed by {args[0]} hours.")
         return
 
 

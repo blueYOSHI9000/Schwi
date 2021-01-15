@@ -6,7 +6,8 @@
 		"status": "online",
 		"activityType": "listening",
 		"activityName": "schwi.help",
-		"activityURL": ""
+		"activityURL": "",
+		"embedColor": ""
 	},
     "permissions": {
     	"editFeeds": "manage_channels"

@@ -5,7 +5,8 @@
 		"status": "online",//the status the bot should use, can be "online", "idle", "dnd" (do not disturb) or "invisible".
 		"activityType": "listening",//the activity type the bot should use, can be "PLAYING", "WATCHING", "LISTENING" or "STREAMING".
 		"activityName": "schwi.help",//the activity name the bot should use.
-		"activityURL": ""//---currently unused due to issues with it--- the stream URL in case the "STREAMING" activity type is used. Can only be Twitch or YouTube links.
+		"activityURL": "",//---currently unused due to issues with it--- the stream URL in case the "STREAMING" activity type is used. Can only be Twitch or YouTube links.
+		"embedColor": ""//default embed color - if empty it uses the color of it's role
 	},
     "permissions": {//available permissions are listed here: https://discordpy.readthedocs.io/en/latest/api.html#discord.Permissions
     	"editFeeds": "manage_channels"//permission to add/edit/remove feeds
