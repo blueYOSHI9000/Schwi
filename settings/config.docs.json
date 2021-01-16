@@ -9,6 +9,7 @@
 		"embedColor": ""//default embed color - if empty it uses the color of it's role
 	},
     "permissions": {//available permissions are listed here: https://discordpy.readthedocs.io/en/latest/api.html#discord.Permissions
+    	"scanFeeds": "send_messages",//permission to scan feeds (schwi.scan)
     	"editFeeds": "manage_channels"//permission to add/edit/remove feeds
     },
 	"rss": {

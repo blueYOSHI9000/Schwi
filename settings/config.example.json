@@ -10,6 +10,7 @@
 		"embedColor": ""
 	},
     "permissions": {
+    	"scanFeeds": "send_messages",
     	"editFeeds": "manage_channels"
     },
 	"rss": {

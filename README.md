@@ -1,3 +1,11 @@
+# SchwiRSS
+This is a RSS bot for discord intended to be easy to install. *This bot is NOT effecient when used in a lot of servers at once! See [MonitoRSS](https://monitorss.xyz/) if that's what you need.*
+
+This bot is not hosted anywhere and that will likely not change (again - use MonitoRSS if that's what you need). It is however easy to setup.  
+The bot is written entirely in Python and as such should be able to run on nearly every system. Instructions on how to install are below. For any system that isn't Windows/Linux, simply running `main.py` should be good once the files in `/settings` have been setup (see below).
+
+Feel free to ask me if there's any questions (Discord: `blueYOSHI#1333` - Twitter: [@yoshisrc](https://twitter.com/yoshisrc) - or simply use the Discussion tab on Github).
+
 # Install SchwiRSS
 ## easy method
 - download the source code (either via git or just the .zip)
@@ -47,7 +55,20 @@
 | :----------------------------------------: | :-----------------------------------------------------------------------------------------------------: |
 | `schwi.help [command]`                     | Displays the help command, optionally you can add a command on top so it displays help for that command |
 | `schwi.ping`                               | Check the bots ping                                                                                     |
-| `schwi.say <something>`                    | The bot says exactly what you want it to say                                                            |
+| `schwi.list [channel] [page]`              | Lists all feeds in the specified channel (or the current server if no channel specified)                |
+| `schwi.find <name>`                        | Lists all feeds with the specified name (capitalization doesn't matter)                                 |
+
+## Manage feeds
+|   Command                                  |   Description                                                                                           |
+| :----------------------------------------: | :-----------------------------------------------------------------------------------------------------: |
+| `schwi.add <channel> <url> <name>`         | Adds a new feed                                                                                         |
+| `schwi.remove <name>`                      | Removes the specified feed (does nothing if there's more than one feed with the same name)              |
+| `schwi.removeall <name>`                   | Removes all feeds with the same name                                                                    |
+| `schwi.removeurl <url>`                    | Removes all feeds with the specified url                                                                |
+| `schwi.move <name> <new channel>`          | Moves the specified feed to a different channel                                                         |
+
+Note: These obviously only affect the feeds in the server the command was used.  
+This bot is still a WIP so editing feeds can be a pain currently, it might be better to just simply remove feeds and re-add them if they have to be edited.
 
 ## Owner commands
 |   Command                                  |   Description                                                                                           |
@@ -57,6 +78,7 @@
 | `schwi.setstatus <status>`                 | Changes the online status of the bot (can be `online`, `idle`, `dnd` or `invisible`)                    |
 | `schwi.setactivity <type> <name>`          | Changes the bots activity (type can be `PLAYING`, `WATCHING`, `LISTENING`, `STREAMING`)                 |
 | `schwi.setpresence <status> <type> <name>` | Changes the bots presence (status & activity - see above), url has to be changed manually in the config |
+| `schwi.delayscan <hours>`                  | Delays the next scan by the specified amount of hours                                                   |
 
 # Run SchwiRSS on startup
 ## Windows

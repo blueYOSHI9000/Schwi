@@ -6,6 +6,7 @@ import time
 
 import modules.convert_time as t
 from modules.log import log
+import modules.misc as misc
 
 def scan_feed(url):
     """Simply scans a feed and returns it. Does NOT check whether
@@ -77,7 +78,7 @@ def get_embed_from_item(*, item, db_item, feed, channel_item, client):
     else:
         embed['url'] = db_item['url']
 
-    embed['color'] = get_embed_color(default_color=client.get_guild(channel_item['guildID']).me.color)
+    embed['color'] = misc.get_embed_color(default_color=client.get_guild(channel_item['guildID']).me.color)
 
 
     embed = discord.Embed(**embed)
@@ -224,7 +225,7 @@ async def scan_all_feeds(*, client):
 
                     channel = client.get_channel(c['channelID'])
                     for r in results:
-                        embed = get_embed_from_item(item=results[r], db_item=feeds[i], feed=feed, channel_item=c, client=client)
+                        embed = get_embed_from_item(item=r, db_item=feeds[i], feed=feed, channel_item=c, client=client)
                         await channel.send(embed=embed)
 
             feeds[i]['lastChecked'] = t.struct_to_ms(t.get_current_time())
