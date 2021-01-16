@@ -47,7 +47,7 @@ class Basic(commands.Cog):
         list_channel = False
         client = self.bot
 
-        log(f'{prefix}list executed.', 'spamInfo')
+        await log(f'{prefix}list executed.', 'spamInfo')
         
         # check if an argument is used
         arg1_available = False
@@ -115,7 +115,7 @@ class Basic(commands.Cog):
         # get actual message
         text = get_args(ctx, combine=True)
 
-        log(f'{prefix}find executed.', 'spamInfo')
+        await log(f'{prefix}find executed.', 'spamInfo')
         
         results = manage_feeds.get_feed_by_name(text, ctx.message.guild.id)
 

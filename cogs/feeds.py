@@ -24,7 +24,7 @@ class Feeds(commands.Cog):
         # get actual message
         args = get_args(ctx)
 
-        log(f'{prefix}add executed.', 'spamInfo')
+        await log(f'{prefix}add executed.', 'spamInfo')
         
         user_permissions = ctx.message.author.guild_permissions
         if await misc.check_permission(ctx=ctx, required='editFeeds', user=user_permissions, author_ID=author_ID) == False:
@@ -52,10 +52,10 @@ class Feeds(commands.Cog):
 
         if result == 'added':
             await ctx.send(content=f'<@!{author_ID}> **{name}** was successfully added to <#{channel.id}>!')
-            log(f'**{name}** was added to <#{channel.id}>.', 'info', client=self.bot)
+            await log(f'**{name}** was added to <#{channel.id}>.', 'info', client=self.bot)
         elif result == 'exists':
             await ctx.send(content=f'<@!{author_ID}> **{name}** is already registered in <#{channel.id}>. Use `{prefix}edit <name>` to edit the entry.')
-            log(f'**{name}** was already added to <#{channel.id}>.', 'spamInfo', client=self.bot)
+            await log(f'**{name}** was already added to <#{channel.id}>.', 'spamInfo', client=self.bot)
         else:
             await ctx.send(content=f'<@!{author_ID}> Something went wrong while adding **{name}**, it might\'ve been added, it might\'ve not. Use {prefix}list <#{channel}> to check whether it has been added or not.')
 
@@ -73,7 +73,7 @@ class Feeds(commands.Cog):
         # get actual message
         text = get_args(ctx, combine=True)
 
-        log(f'{prefix}remove executed.', 'spamInfo')
+        await log(f'{prefix}remove executed.', 'spamInfo')
         
         user_permissions = ctx.message.author.guild_permissions
         if await misc.check_permission(ctx=ctx, required='editFeeds', user=user_permissions, author_ID=author_ID) == False:
@@ -104,7 +104,7 @@ class Feeds(commands.Cog):
                 f.truncate()
 
             await ctx.send(content=f'<@!{author_ID}> Successfully deleted the entry **{text}**!')
-            log(f'**{text}** was removed.', 'info', client=self.bot)
+            await log(f'**{text}** was removed.', 'info', client=self.bot)
             return
         elif len(results) > 1:
             await ctx.send(content=f'<@!{author_ID}> There are more results than one.\nUse `{prefix}removeall <name>` to remove all entries with a certain name.\nUse `{prefix}removeurl <url>` to remove all feeds with a certain url.\nUse `{prefix}find <name>` to find all entries with a certain name.')
@@ -129,7 +129,7 @@ class Feeds(commands.Cog):
         # get actual message
         text = get_args(ctx, combine=True)
 
-        log(f'{prefix}removeall executed.', 'spamInfo')
+        await log(f'{prefix}removeall executed.', 'spamInfo')
         
         user_permissions = ctx.message.author.guild_permissions
         if await misc.check_permission(ctx=ctx, required='editFeeds', user=user_permissions, author_ID=author_ID) == False:
@@ -166,7 +166,7 @@ class Feeds(commands.Cog):
                 f.truncate()
 
             await ctx.send(content=f'<@!{author_ID}> Successfully deleted all entries named **{text}**!')
-            log(f'All entries named **{text}** were removed.', 'info', client=self.bot)
+            await log(f'All entries named **{text}** were removed.', 'info', client=self.bot)
             return
         elif len(results) < 1:
             await ctx.send(content=f'<@!{author_ID}> Could not find any feed with that name in this server. Use `{prefix}list` to list all entries in this server.')
@@ -188,7 +188,7 @@ class Feeds(commands.Cog):
         # get actual message
         text = get_args(ctx, combine=True)
 
-        log(f'{prefix}removeurl executed.', 'spamInfo')
+        await log(f'{prefix}removeurl executed.', 'spamInfo')
         
         user_permissions = ctx.message.author.guild_permissions
         if await misc.check_permission(ctx=ctx, required='editFeeds', user=user_permissions, author_ID=author_ID) == False:
@@ -225,7 +225,7 @@ class Feeds(commands.Cog):
                 f.truncate()
 
             await ctx.send(content=f'<@!{author_ID}> Successfully deleted all entries with the url {text}!')
-            log(f'All entries with the url **{text}** were removed.', 'info', client=self.bot)
+            await log(f'All entries with the url **{text}** were removed.', 'info', client=self.bot)
             return
         elif len(results) < 1:
             await ctx.send(content=f'<@!{author_ID}> Could not find any feed with that url in this server. Use `{prefix}list` to list all entries in this server.')
@@ -246,7 +246,7 @@ class Feeds(commands.Cog):
         # get actual message
         args = get_args(ctx)
 
-        log(f'{prefix}move executed.', 'spamInfo')
+        await log(f'{prefix}move executed.', 'spamInfo')
         
         user_permissions = ctx.message.author.guild_permissions
         if await misc.check_permission(ctx=ctx, required='editFeeds', user=user_permissions, author_ID=author_ID) == False:
@@ -288,7 +288,7 @@ class Feeds(commands.Cog):
                 f.truncate()
 
             await ctx.send(content=f'<@!{author_ID}> Successfully moved the entry **{name}** to <#{channel.id}>!')
-            log(f'**{name}** was moved to <#{channel.id}>.', 'info', client=self.bot)
+            await log(f'**{name}** was moved to <#{channel.id}>.', 'info', client=self.bot)
             return
         elif len(results) > 1:
             await ctx.send(content=f'<@!{author_ID}> There are more results than one.')
