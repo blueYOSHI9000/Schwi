@@ -53,9 +53,9 @@ def get_ra_rich_presence(db_entry):
 
             if 'replaceRegex' in game_options:
                 # delete the regex match
-                rich_presence['details'] = re.sub(game_options['replaceRegex'], '', rich_presence['details'])
+                rich_presence['state'] = re.sub(game_options['replaceRegex'], '', rich_presence['state'])
             elif 'useRegex' in game_options:
                 # only use the regex matches
-                rich_presence['details'] = ''.join(re.findall(game_options['replaceRegex'], rich_presence['details']))
+                rich_presence['state'] = ''.join(re.findall(game_options['replaceRegex'], rich_presence['state']))
 
         return rich_presence
