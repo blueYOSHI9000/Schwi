@@ -20,6 +20,16 @@
         "oldestFirst": true,//posts the oldest items first
         "dateFormat": "%a %d %b %Y at %I:%M%p"//the date format that's used, formatted using pythons time.strftime() function (see https://docs.python.org/2/library/time.html#time.strftime)
 	},
+    "RPC": {
+        "autoRestart": true,//whether Schwi should automatically restart when starting rich presence (since it can only be changed at startup)
+        "interval": 5,//the interval in which the bot updates the Rich Presence - time is in minutes - must be at least 1 -- requires a restart
+        "displayStartTime": true,//Displays the start time, starts when schwi.startrpc is used (time can be reset using schwi.resetrpctime)
+        "RetroAchievements": {//settings only used for the RetroAchievements rich presences
+            "displayGameName": false,//whether the game name should be displayed (the game name can always be displayed by hovering over the cover art if one is used)
+            "displaySmallImage": true,//displays a small image with the name 'ra' - intended to be the RetroAchievements logo
+            "smallImageText": "RetroAchievements"//the text that gets displayed when hovering over the small image
+        }
+    },
 	"log": {
 		"level": "info",//what level should be output, can be one of the following: "debug" > "spamInfo" > "info"  > "warn" > "silent" -- "spamInfo" is basically the same as "info" except a lot more spammy at times, will post every single feed being parsed along other things
 		"discordLogOutput": false,//if logs should be output to discord as well (note: will not output spamInfo and below)

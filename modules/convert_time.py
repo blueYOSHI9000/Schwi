@@ -30,10 +30,10 @@ def struct_to_ms(struct):
     return (dt - epoch).total_seconds() * 1000.0
 
 def get_current_time():
-    """Gets current time as a time.struct_time object
+    """Gets current UTC time as a time.struct_time object
 
     Returns:
         The current time as a time.struct_time object
     """
-    current = datetime.datetime.now()
+    current = datetime.datetime.utcnow()
     return current.timetuple()

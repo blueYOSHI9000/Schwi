@@ -16,7 +16,6 @@ class Debug(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         
-
     @commands.command(
         name='logmsg',
         description='Logs a message in the console',
