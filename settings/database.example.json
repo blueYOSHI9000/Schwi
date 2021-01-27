@@ -1,9 +1,12 @@
 {
-	"general": {
-		"rss": {
-			"lastChecked": 1598612570866
-		}
-	},
-	"feeds": {
-	}
+    "general": {
+        "lastChecked": 1598612570866.0,
+        "RPCCommands": [],
+        "lastRPCUsed": false,
+        "RPCStartedAt": 1598612570866.0
+    },
+    "RPC": [
+    ],
+    "feeds": {
+    }
 }

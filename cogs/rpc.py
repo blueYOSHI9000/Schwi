@@ -49,7 +49,7 @@ class RPC(commands.Cog):
                     break
 
         if result == False:
-            await ctx.send(content=f'<@!{author_ID}> Could not find a RPC entry with the name "*{name}*".')
+            await ctx.send(content=f'<@!{author_ID}> Could not find a RPC entry with the name "**{name}**".')
             return
 
         with open('settings/database.json', 'r+') as f:
@@ -65,7 +65,7 @@ class RPC(commands.Cog):
             f.truncate()
 
         if json.load(open('settings/config.json', 'r'))['RPC']['autoRestart'] == True:
-            await ctx.send(content=f'<@!{author_ID}> Restarting now to load the RPC entry "*{name}*"...')
+            await ctx.send(content=f'<@!{author_ID}> Restarting now to load the RPC entry "**{name}**"...')
             await log(f'{user} loaded the RPC entry "{name}". Schwi is now rebooting...', 'info')
 
             # sleep for 1s so the log can be written to file in time
@@ -73,7 +73,7 @@ class RPC(commands.Cog):
 
             os.execl(sys.executable, sys.executable, *sys.argv)
         else:
-            await ctx.send(content=f'<@!{author_ID}> The RPC entry "*{name}*" will be loaded the next time Schwi is started. Use {prefix}reboot to reboot Schwi now.')
+            await ctx.send(content=f'<@!{author_ID}> The RPC entry "**{name}**" will be loaded the next time Schwi is started. Use {prefix}reboot to reboot Schwi now.')
             await log(f'{user} loaded the RPC entry "{name}".', 'info')
         return
 
