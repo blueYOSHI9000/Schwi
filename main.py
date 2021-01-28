@@ -53,6 +53,34 @@ async def on_ready():
     background_task()
     return
 
+
+# Discord Rich Presence
+
+# Can't log because not awaited and can't await because not inside a function ._.
+if rpc_used != False:
+    reglog('Start Rich Presence...', 'info')
+
+    try:
+        pypresence_RPC = Presence(rpc_used, loop=bot.loop)
+        pypresence_RPC.connect()
+    except:
+        reglog('Discord is not open, turning off Rich Presence.', 'warn')
+        rpc_used = False
+        with open('settings/database.json', 'r+') as f:
+            database = json.load(f)
+
+            database['general']['lastRPCUsed'] = False
+
+            # reset file position to the beginning - stackoverflow copy, dont ask
+            f.seek(0)
+            json.dump(database, f, indent=4)
+            f.truncate()
+else:
+    reglog('Skip starting Rich Presence', 'info')
+
+
+# Background Tasks
+
 rss_interval = config['rss']['interval'] * 60
 # make sure interval is bigger than 10min
 if rss_interval < 600:
@@ -81,17 +109,9 @@ class background_task(commands.Cog):
             reglog('Update rich presence...', 'spamInfo')
 
             code = rpc.update_rpc()
+            #print(code)
             exec(code)
         except RuntimeError:
             pass
-
-# Can't log because not awaited and can't await because not inside a function ._.
-if rpc_used != False:
-    reglog('Start Rich Presence...', 'info')
-
-    pypresence_RPC = Presence(rpc_used, loop=bot.loop)
-    pypresence_RPC.connect()
-else:
-    reglog('Skip starting Rich Presence', 'info')
 
 bot.run(token, bot=True, reconnect=True)

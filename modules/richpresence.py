@@ -54,11 +54,6 @@ def update_rpc():
         json.dump(db, f, indent=4)
         f.truncate()
 
-    # if RPC is off just return it
-    # only done here and not earlier so the database can be saved correctly (and the commands being cleared)
-    if last_rpc_used == False:
-        return 'pass'
-
     results = []
 
     for c in commands:
@@ -66,6 +61,10 @@ def update_rpc():
             return 'pypresence_RPC.close()'
         if c['type'] == 'update':
             results.append(f'pypresence_RPC.update(**{c["value"]})')
+
+    # if RPC is off just return it
+    if last_rpc_used == False:
+        return 'pass'
 
     if entry == False:
         # add 'pass' in case it's empty since exec() needs to have something

@@ -111,7 +111,7 @@ class RPC(commands.Cog):
         description='Resets the RPC start time',
         hidden=True
     )
-    async def stoprpc_command(self, ctx):
+    async def resetrpctime_command(self, ctx):
         author_ID = str(ctx.message.author.id)
         user = ctx.message.author.name + '#' + ctx.message.author.discriminator
         prefix = json.load(open('settings/config.json', 'r'))['bot']['prefix'][0]
