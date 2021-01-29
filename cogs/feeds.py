@@ -19,6 +19,9 @@ class Feeds(commands.Cog):
         usage='<channel> <url> <name>'
     )
     async def add_command(self, ctx):
+        if await misc.is_dm(ctx) == True:
+            return
+
         author_ID = ctx.message.author.id
         prefix = json.load(open('settings/config.json', 'r'))['bot']['prefix'][0]
         # get actual message
@@ -68,6 +71,9 @@ class Feeds(commands.Cog):
         usage='<name>'
     )
     async def remove_command(self, ctx):
+        if await misc.is_dm(ctx) == True:
+            return
+
         author_ID = ctx.message.author.id
         prefix = json.load(open('settings/config.json', 'r'))['bot']['prefix'][0]
         # get actual message
@@ -124,6 +130,9 @@ class Feeds(commands.Cog):
         usage='<name>'
     )
     async def removeall_command(self, ctx):
+        if await misc.is_dm(ctx) == True:
+            return
+
         author_ID = ctx.message.author.id
         prefix = json.load(open('settings/config.json', 'r'))['bot']['prefix'][0]
         # get actual message
@@ -183,6 +192,9 @@ class Feeds(commands.Cog):
         usage='<url>'
     )
     async def removeurl_command(self, ctx):
+        if await misc.is_dm(ctx) == True:
+            return
+
         author_ID = ctx.message.author.id
         prefix = json.load(open('settings/config.json', 'r'))['bot']['prefix'][0]
         # get actual message
@@ -241,6 +253,9 @@ class Feeds(commands.Cog):
         usage='<name> <new channel>'
     )
     async def move_command(self, ctx):
+        if await misc.is_dm(ctx) == True:
+            return
+
         author_ID = ctx.message.author.id
         prefix = json.load(open('settings/config.json', 'r'))['bot']['prefix'][0]
         # get actual message

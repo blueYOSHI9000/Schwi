@@ -139,46 +139,16 @@ class Owner(commands.Cog):
         prefix = json.load(open('settings/config.json', 'r'))['bot']['prefix'][0]
 
         if not is_owner(author_ID):
-            await ctx.send(content=f"<@!{author_ID}> Owner commands can only be executed by owners.")
+            await ctx.send(content=f'<@!{author_ID}> Owner commands can only be executed by owners.')
             await log(f'Owner command cannot be executed by non-owners. ({prefix}setpresence used by {user}', 'warn', client=self.bot)
             return
             
         args = get_args(ctx)
-        status = args[0].lower()
-        atype = args[1].upper()
-        name = ' '.join(args[2:])
 
-        if (status not in ('online', 'idle', 'dnd', 'invisible')):
-            await ctx.send(content=f"<@!{author_ID}> **{status}** was not a valid argument. Please use one of the following: 'online', 'idle', 'dnd', 'invisible' (without the apostrophes).")
+        if len(args) < 3:
+            await ctx.send(content=f'<@!{author_ID}> Not enough arguments. Use `{prefix}setpresence <status> <activity> <activity name>`.')
             return
 
-        if (atype not in ('PLAYING', 'WATCHING', 'LISTENING', 'STREAMING')):
-            await ctx.send(content=f"<@!{author_ID}> **{atype}** was not a valid argument. Please use one of the following: 'PLAYING', 'WATCHING', 'LISTENING', 'STREAMING' (without the apostrophes).")
-            return
-
-        await activity.change_activity(status=status, atype=atype, name=name, client=self.bot)
-
-        await log(f'Presence was updated to \'{status} - {atype} {name}\' by {user}', 'info', client=self.bot)
-        await ctx.send(content=f"<@!{author_ID}> Presence was updated to **{status}** - **{atype} {name}**! (Note: If it doesn't update it might've got rate-limited, try again in a couple minutes in that case.)")
-        return
-
-    @commands.command(
-        name='setpresence',
-        description='Changes the bot\'s presence (online status & activity)',
-        aliases=['changepresence', 'updatepresence'],
-        usage='<status (can be \'online\', \'idle\', \'dnd\', \'invisible\')> <activity (can be \'PLAYING\', \'WATCHING\', \'LISTENING\', \'STREAMING\')> <activity name>'
-    )
-    async def setpresence_command(self, ctx):
-        author_ID = str(ctx.message.author.id)
-        user = ctx.message.author.name + '#' + ctx.message.author.discriminator
-        prefix = json.load(open('settings/config.json', 'r'))['bot']['prefix'][0]
-
-        if not is_owner(author_ID):
-            await ctx.send(content=f"<@!{author_ID}> Owner commands can only be executed by owners.")
-            await log(f'Owner command cannot be executed by non-owners. ({prefix}setpresence used by {user}', 'warn', client=self.bot)
-            return
-            
-        args = get_args(ctx)
         status = args[0].lower()
         atype = args[1].upper()
         name = ' '.join(args[2:])

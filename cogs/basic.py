@@ -39,6 +39,9 @@ class Basic(commands.Cog):
         usage='[channel] [page]'
     )
     async def list_command(self, ctx):
+        if await misc.is_dm(ctx) == True:
+            return
+
         author_ID = ctx.message.author.id
         prefix = json.load(open('settings/config.json', 'r'))['bot']['prefix'][0]
 
@@ -110,6 +113,9 @@ class Basic(commands.Cog):
         usage='<name>'
     )
     async def find_command(self, ctx):
+        if await misc.is_dm(ctx) == True:
+            return
+
         author_ID = ctx.message.author.id
         prefix = json.load(open('settings/config.json', 'r'))['bot']['prefix'][0]
         # get actual message

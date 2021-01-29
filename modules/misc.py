@@ -152,3 +152,19 @@ def is_owner(user):
     owners = json.load(open('settings/config.json', 'r'))['bot']['owners']
 
     return str(user) in owners
+
+async def is_dm(ctx, *, reply=True):
+    """Checks if the current channel is a DM and optionally
+
+    Args:
+        ctx: message ctx
+        reply (boolean): If it should automatically reply saying that the command isn't available (defaults to True)
+    Returns:
+        True if DM, False if not
+    """
+    if ctx.guild == None:
+        if reply == True:
+            await ctx.send(content=f'This command cannot be executed in DMs.')
+        return True
+    else:
+        return False
