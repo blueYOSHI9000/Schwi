@@ -93,7 +93,10 @@ class Basic(commands.Cog):
         messages = {}
         messages['no_items_available'] = f'Use `{prefix}list` to see all items in the entire server.\nUse `{prefix}list [channel]` to view a different channel.\nOr use `{prefix}add <channel> <url> <name>` to add a new feed.'
         messages['no_items_on_page'] = f'Use `{prefix}list [channel] {page - 1}` to view the previous page.'
-        messages['and_more'] = f'Use `{prefix}list [channel] {page + 1}` to view the next page.'
+        if list_channel == True:
+            messages['and_more'] = f'Use `{prefix}list [channel] [page]` to view a different page.'
+        else:
+            messages['and_more'] = f'Use `{prefix}list [page]` to view a different page.'
 
         if list_channel == True:
             results = manage_feeds.get_feed_by_channel(channel.id)

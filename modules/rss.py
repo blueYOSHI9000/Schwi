@@ -193,9 +193,15 @@ async def scan_all_feeds(*, client):
                         time.sleep(post_delay)
 
                         channel = client.get_channel(c['channelID'])
-                        await channel.send(f'**{c["feedName"]}** is not available (this message won\'t be posted again until it\'s available again). Feed URL: {feeds[i]["url"]}')
+                        try:
+                            await channel.send(f'**{c["feedName"]}** is not available (this message won\'t be posted again until it\'s available again). Feed URL: {feeds[i]["url"]}')
+                        except:
+                            await log(f'Could not send {feeds[i]["name"]} as the channel is likely deleted.', 'warn', client=client)
 
                 continue
+
+            # mark feeds as available
+            feeds[i]['unavailable'] = False
 
             # check if posts should be combined
             if len(results) > combine_posts and combine_posts != 0:
@@ -210,8 +216,11 @@ async def scan_all_feeds(*, client):
                     embed = get_embed_from_item(item=first_item, db_item=feeds[i], feed=feed, channel_item=c, client=client)
 
                     channel = client.get_channel(c['channelID'])
-                    await channel.send(embed=embed)
-                    await channel.send(f'...and {len(results) - combine_posts} more from {c["feedName"]}.')
+                    try:
+                        await channel.send(embed=embed)
+                        await channel.send(f'...and {len(results) - combine_posts} more from {c["feedName"]}.')
+                    except:
+                        await log(f'Could not send {feeds[i]["name"]} as the channel is likely deleted.', 'warn', client=client)
 
             # post all items
             else:
@@ -226,7 +235,10 @@ async def scan_all_feeds(*, client):
                     channel = client.get_channel(c['channelID'])
                     for r in results:
                         embed = get_embed_from_item(item=r, db_item=feeds[i], feed=feed, channel_item=c, client=client)
-                        await channel.send(embed=embed)
+                        try:
+                            await channel.send(embed=embed)
+                        except:
+                            await log(f'Could not send {feeds[i]["name"]} as the channel is likely deleted.', 'warn', client=client)
 
             feeds[i]['lastChecked'] = t.struct_to_ms(t.get_current_time())
             await log(f' Done scanning {feeds[i]["name"]}.', 'spamInfo', client=client)
