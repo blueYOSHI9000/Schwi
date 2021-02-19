@@ -27,6 +27,7 @@
         "displayStartTime": true,
         "RetroAchievements": {
             "displayGameName": true,
+            "displayAchievementsGotten": true,
             "displaySmallImage": true,
             "smallImageText": "RetroAchievements"
         }
