@@ -40,7 +40,7 @@ def get_ra_rich_presence(db_entry):
             if config['RPC']['RetroAchievements']['displayGameName'] == True:
                 with urllib.request.urlopen(f"https://retroachievements.org/API/API_GetGameInfoAndUserProgress.php?z={ra_user}&y={ra_api_key}&u={ra_user}&g={game_ID}") as user_progress_url:
                     user_progress_data = json.loads(user_progress_url.read().decode())
-                    rich_presence['details'] = f'[{user_progress_data["NumAchievements"]}/{user_progress_data["NumAwardedToUser"]}] {game_name}'
+                    rich_presence['details'] = f'[{user_progress_data["NumAwardedToUser"]}/{user_progress_data["NumAchievements"]}] {game_name}'
             else:
                 rich_presence['details'] = game_name
 

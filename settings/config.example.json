@@ -19,7 +19,8 @@
 		"postDelay": 500,
         "combinePosts": 1,
         "oldestFirst": true,
-        "dateFormat": "%a %d %b %Y at %I:%M%p"
+        "dateFormat": "%a %d %b %Y at %I:%M%p",
+        "duplicatePreventionAmount": 10
 	},
     "RPC": {
         "autoRestart": true,
