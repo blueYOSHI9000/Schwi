@@ -31,7 +31,7 @@ def get_new_items_from_feed(*, feed=False, url=False, last_checked):
     duplicate_prevention_amount = json.load(open('settings/config.json', 'r'))['rss']['duplicatePreventionAmount']
     with open('settings/database.json', 'r+') as f:
         database = json.load(f)
-        last_post_titles = database['rss']['rssLastPostTitles']
+        last_post_titles = database['general']['rssLastPostTitles']
 
         # if
         if feed == False:
