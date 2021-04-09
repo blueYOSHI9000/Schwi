@@ -18,8 +18,7 @@
 		"postDelay": 500,//delay between feed posts - time is in milliseconds
         "combinePosts": 1,//If there are more posts than this from a single feed then all subsequent posts will get combined into one (if there are 3 new posts and this is set to 1 then the first will get posted normally, the rest gets combined into a "...and 2 more posts" - set to 0 to disable)
         "oldestFirst": true,//posts the oldest items first
-        "dateFormat": "%a %d %b %Y at %I:%M%p",//the date format that's used, formatted using pythons time.strftime() function (see https://docs.python.org/2/library/time.html#time.strftime)
-        "duplicatePreventionAmount": 10//The amount of posts that should be remembered to prevent duplicate posts (simply remembers title, nothing else)
+        "dateFormat": "%a %d %b %Y at %I:%M%p"//the date format that's used, formatted using pythons time.strftime() function (see https://docs.python.org/2/library/time.html#time.strftime)
 	},
     "RPC": {
         "autoRestart": true,//whether Schwi should automatically restart when starting rich presence (since it can only be changed at startup)

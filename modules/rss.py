@@ -28,33 +28,23 @@ def get_new_items_from_feed(*, feed=False, url=False, last_checked):
     Returns:
         list of all new items
     """
-    duplicate_prevention_amount = json.load(open('settings/config.json', 'r'))['rss']['duplicatePreventionAmount']
-    with open('settings/database.json', 'r+') as f:
-        database = json.load(f)
-        last_post_titles = database['general']['rssLastPostTitles']
+    # if
+    if feed == False:
+        feed = scan_feed(url)
 
-        # if
-        if feed == False:
-            feed = scan_feed(url)
+    # check if the feed exists - otherwise return False to indicate that the page likely doesn't exist (anymore)
+    try:
+        feed.entries[0]
+    except (NameError, AttributeError, IndexError):
+        return False
 
-        # check if the feed exists - otherwise return False to indicate that the page likely doesn't exist (anymore)
-        try:
-            feed.entries[0]
-        except (NameError, AttributeError, IndexError):
-            return False
+    final = []
+    # dont stop scanning after the items are older since some new items might've been lower in the list (like for Manga, some special in-between chapters might've been released later on and as such are lower in the list where they technically belong despite being new)
+    for i in feed.entries:
+        if i.published_parsed > t.ms_to_struct(last_checked):
+            final.append(i)
 
-        final = []
-        # dont stop scanning after the items are older since some new items might've been lower in the list (like for Manga, some special in-between chapters might've been released later on and as such are lower in the list where they technically belong despite being new)
-        for i in feed.entries:
-            if i.published_parsed > t.ms_to_struct(last_checked):
-                # check if post has already been posted by comparing the title to previous titles
-                if i.title in last_post_titles == false:
-                    final.append(i)
-                    # add new title to list of previous titles & make sure said list only includes the specified amount of titles
-                    last_post_titles.append(i.title)
-                    if len(last_post_titles) > duplicate_prevention_amount:
-                        rm_amount = len(last_post_titles) - duplicate_prevention_amount
-                        last_post_titles = last_post_titles[rm_amount:]
+    # TODO: add the last 10 titles or something to the database as a double check
 
     return final
 
