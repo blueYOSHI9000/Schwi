@@ -75,11 +75,11 @@ def update_rpc():
     if entry['RetroAchievements'] == True:
         rich_presence = ra.get_ra_rich_presence(entry)
     else:
-        rich_presence = entry["richPresence"]
+        rich_presence = entry['richPresence']
 
     if config['RPC']['displayStartTime'] == True:
         rich_presence['start'] = json.load(open('settings/database.json', 'r'))['general']['RPCStartedAt']
 
-    results.append(f'pypresence_RPC.update(**{repr(rich_presence)})')
+    results.append(f"pypresence_RPC.update(**{repr(rich_presence)})")
 
     return '\n'.join(results)

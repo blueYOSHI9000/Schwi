@@ -12,6 +12,7 @@ import time
 
 import modules.activity as activity
 import modules.rss as rss
+import modules.manage_reminders as mrem
 from modules.log import log, reglog
 import modules.richpresence as rpc
 
@@ -38,7 +39,7 @@ bot = commands.Bot(
 * .   *  ' .  * .  ' .  *  ' *  .  .  
 """
 
-cogs = ['cogs.basic', 'cogs.feeds', 'cogs.owner', 'cogs.rpc', 'cogs.debug']
+cogs = ['cogs.basic', 'cogs.feeds', 'cogs.reminders', 'cogs.owner', 'cogs.rpc', 'cogs.debug']
 
 @bot.event
 async def on_ready():
@@ -86,6 +87,11 @@ rss_interval = config['rss']['interval'] * 60
 if rss_interval < 600:
     rss_interval = 600
 
+reminders_interval = config['reminders']['interval'] * 60
+# make sure interval is bigger than 1min
+if reminders_interval < 60:
+    reminders_interval = 60
+
 rpc_interval = config['RPC']['interval'] * 60
 # make sure interval is bigger than 1min
 if rpc_interval < 60:
@@ -94,12 +100,17 @@ if rpc_interval < 60:
 class background_task(commands.Cog):
     def __init__(self):
         self.rss_background_task.start()
+        self.reminders_background_task.start()
         if rpc_used != False:
             self.rpc_background_task.start()
 
     @tasks.loop(seconds=rss_interval)
     async def rss_background_task(self):
         await rss.scan_all_feeds(client=bot)
+
+    @tasks.loop(seconds=reminders_interval)
+    async def reminders_background_task(self):
+        await mrem.scan_all_reminders(client=bot)
 
     @tasks.loop(seconds=rpc_interval)
     async def rpc_background_task(self):

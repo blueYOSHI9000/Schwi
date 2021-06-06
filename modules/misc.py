@@ -3,6 +3,8 @@ import discord
 import math
 import json
 
+import modules.convert_time as ct
+
 def get_args(ctx, combine=False):
     """Splits a message into arguments.
 
@@ -27,20 +29,20 @@ def get_args(ctx, combine=False):
     return args
 
 async def is_valid_channel(*, ctx, channel, author_ID=False, command=False, send_message=True):
-    """Checks whether a channel is valid and in the current server.
+    """Checks whether a channel is valid and in the current server. Can optionally also send a message replying to the author that the entered channel is invalid.
 
     Args:
         ctx: message ctx
         channel (channel object): the channel object, likely gotten with client.get_channel()
         author_ID (number): ID of the author, used to @ them (optional if send_message is False)
         command (string): the command used in the message sent (optional if send_message is False)
-        send_message (boolean): sends an error message if true (sends on default)
+        send_message (boolean): sends an error message if true (True on default)
     Returns:
         True if valid, False if not
     """
     if channel == None or channel.guild.id != ctx.message.guild.id:
         if send_message == True:
-            await ctx.send(content=f'<@!{author_ID}> Channel entered was either invalid or not from this server. Please use `{command}` in the server that has said channel.')
+            await ctx.send(content=f"<@!{author_ID}> Channel entered was either invalid or not from this server. Please use `{command}` in the server that has said channel.")
         return False
     return True
 
@@ -75,7 +77,7 @@ def convert_hex_to_embed_color(color):
     Returns:
         a discord color object
     """
-    color = int(color.replace("#", ""), 16)
+    color = int(color.replace('#', ''), 16)
     return discord.Colour(int(hex(color), 0))
 
 def get_embed_color(default_color):
@@ -92,52 +94,103 @@ def get_embed_color(default_color):
     else:
         return convert_hex_to_embed_color(config_embed_color)
 
-def create_embed_from_list(*, client, guild, results, title, messages, page=1, pages_used=True):
+def create_embed_from_list(*, client=None, dm=False, guild=None, results, title, messages, page=1, multi_columns=True, pages_used=True, max_items_per_page=12):
     """Creates an embed out of a list
+
+    Messages:
+        messages['item_title_type']: A simple string which decides which title is used (gets evaluated in this function further down).
+        messages['item_desc_type']: A simple string which decides which description is used (gets evaluated in this function further down).
+        messages['no_items_available']: Gets used as a description when no items are available. Best used to explain how to use the command differently so results can be shown.
+        messages['no_items_on_page']: Gets used as a description when there are no items on the current page. Best used to explain how to view the previous page.
+        messages['and_more']: Gets used as a description when there are more items on later pages. Best used to explain how to view the next page.
 
     Args:
         client: the discord.py client (likely self.bot)
-        guild (number): the guild ID used to get the bots color (likely ctx.message.guild.id)
+        dm (boolean): if executed in DMs (defaults to False)
+        guild (number): the guild ID used to get the bots color (likely ctx.message.guild.id) -- not needed if dm is True
         results (list): the list of database entries, likely gotten out of a function in modules/feeds.py
-        title (string): the title that should be used ("All feeds from {title}")
-        messages (dict): messages used - messages['no_items_available'] - messages['no_items_on_page'] - messages['and_more']
+        title (string): the title that should be used ("All items from {title}")
+        messages (dict): messages used - view above for more info
         page (number): the page number
+        multi_columns (boolean): If multiple columns should be used (defaults to True)
         pages_used (boolean): whether pages should even be used (defaults to True)
+        max_items_per_page (int): max amount of items that should be displayed per page (max is 12 with columns and 5 without)
     """
+    if max_items_per_page < 1:
+        max_items_per_page = 1
+
+    #without columns each item takes up a lot more space and as such there should be fewer items per page
+    if multi_columns == False:
+        if max_items_per_page > 7:
+            max_items_per_page = 7
+    elif max_items_per_page > 12:
+        max_items_per_page = 12
 
     embed_dict = {}
 
-    embed_dict['color'] = get_embed_color(default_color=client.get_guild(guild).me.color)
+    #dont ask me about anything discord.py color related, I have absolutely no idea how anything works aside from everything I've written down here - chances are I even forgot about that by the time anyone else reads this because discord.py colors are the biggest pain imaginable and I don't ever wanna work again with them
+    #good luck
+    #you'll need it
+
+    #get the embed color
+    #use #fffffe for DMs as DMs use a transparent color (see below)
+    if dm == True:
+        #create a color object first in order to then edit it
+        embed_dict['color'] = client.user.color
+        embed_dict['color'].value = 16777214
+    else:
+        embed_dict['color'] = get_embed_color(default_color=client.get_guild(guild).me.color)
+    
+    #a color of #000000 (black) is used as transparent so instead it should use #fffffe (almost white - just almost white because #ffffff is reserved apparently) which is how transparent is displayed for anyone that still has functioning eyes (using dark mode)
+    if embed_dict['color'].value == 0:
+        embed_dict['color'].value = 16777214
 
     if pages_used == False:
-        embed_dict['description'] = f'All feeds from **{title}**:'
+        embed_dict['description'] = f"{messages['all_items_from']} **{title}**:"
         page = 1
     else:
-        max_page = math.ceil(len(results)/12)
+        #get max amount of pages
+        max_page = math.ceil(len(results)/max_items_per_page)
         if max_page < 1:
             max_page = 1
 
         if page > max_page:
             page = max_page
-        embed_dict['description'] = f'All feeds from **{title}** (page {page}/{max_page}):'
+        embed_dict['description'] = f"{messages['all_items_from']} **{title}** (page {page}/{max_page}):"
 
     embed = discord.Embed(**embed_dict)
     count = 0
 
+    print(embed.color)
+
     if len(results) == 0:
-        embed.add_field(name=f'No items available.', value=messages['no_items_available'], inline=False)
+        embed.add_field(name=f"No items available.", value=messages['no_items_available'], inline=False)
     else:
-        results = results[(12 * (page - 1)):]
+        results = results[(max_items_per_page * (page - 1)):]
 
         if len(results) == 0:
-            embed.add_field(name=f'No items on this page', value=messages['no_items_on_page'], inline=False)
+            embed.add_field(name=f"No items on this page.", value=messages['no_items_on_page'], inline=False)
 
         for r in results:
             count += 1
-            if count > 12:
-                embed.add_field(name=f'...and {len(results) - count + 1} more', value=messages['and_more'], inline=False)
+            if count > max_items_per_page:
+                embed.add_field(name=f"...and {len(results) - count + 1} more", value=messages['and_more'], inline=False)
                 break
-            embed.add_field(name=r['feedName'], value=f'<#{r["channelID"]}>\n{r["url"]}')
+
+            #get title & descriptions as they have to be evaluated in here
+            if messages['item_title_type'] == 'feeds':
+                item_title = f"{r['feedName']}"
+            elif messages['item_title_type'] == 'reminders':
+                item_title = f"ID {r['id']}"
+
+            if messages['item_desc_type'] == 'feeds':
+                item_desc = f"<#{r['channelID']}>\n{r['url']}"
+            elif messages['item_desc_type'] == 'reminders':
+                item_desc = f"`{ct.ms_to_datetime(r['date']).strftime('%Y-%m-%d %H:%M (%I:%M%p) UTC')}`\n{r['message']}"
+
+
+            #the eval handles the messages like a formatted string
+            embed.add_field(name=item_title, value=item_desc, inline=multi_columns)
 
     return embed
 
@@ -164,7 +217,7 @@ async def is_dm(ctx, *, reply=True):
     """
     if ctx.guild == None:
         if reply == True:
-            await ctx.send(content=f'This command cannot be executed in DMs.')
+            await ctx.send(content=f"This command cannot be executed in DMs.")
         return True
     else:
         return False

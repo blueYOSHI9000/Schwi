@@ -28,19 +28,19 @@ class Owner(commands.Cog):
 
         if not is_owner(author_ID):
             await ctx.send(content=f"<@!{author_ID}> Owner commands can only be executed by owners.")
-            await log(f'Owner command cannot be executed by non-owners. ({prefix}shutdown used by {user}', 'warn', client=self.bot)
+            await log(f"Owner command cannot be executed by non-owners. ({prefix}shutdown used by {user}", 'warn', client=self.bot)
             return
 
-        user = f'{ctx.message.author.name}#{ctx.message.author.discriminator}'
+        user = f"{ctx.message.author.name}#{ctx.message.author.discriminator}"
 
         await ctx.send(content=f"<@!{author_ID}> Shutting down...")
 
-        await log(f'{user} used the command \'{prefix}shutdown\'. Schwi is shutting down...', 'info', client=self.bot)
+        await log(f"{user} used the command '{prefix}shutdown'. Schwi is shutting down...", 'info', client=self.bot)
 
         # sleep for 1s so the log can be written to file in time
         time.sleep(1)
 
-        sys.exit(f'Script exited by using \'{prefix}shutdown\'')
+        sys.exit(f"Script exited by using '{prefix}shutdown'")
         return
 
     @commands.command(
@@ -55,14 +55,14 @@ class Owner(commands.Cog):
 
         if not is_owner(author_ID):
             await ctx.send(content=f"<@!{author_ID}> Owner commands can only be executed by owners.")
-            await log(f'Owner command cannot be executed by non-owners. ({prefix}reboot used by {user})', 'warn', client=self.bot)
+            await log(f"Owner command cannot be executed by non-owners. ({prefix}reboot used by {user})", 'warn', client=self.bot)
             return
 
         user = f'{ctx.message.author.name}#{ctx.message.author.discriminator}'
 
         await ctx.send(content=f"<@!{author_ID}> Rebooting...")
 
-        await log(f'{user} used the command \'{prefix}reboot\'. Schwi is restarting...\n', 'info', client=self.bot)
+        await log(f"{user} used the command '{prefix}reboot'. Schwi is restarting...\n", 'info', client=self.bot)
 
         # sleep for 1s so the log can be written to file in time
         time.sleep(1)
@@ -83,7 +83,7 @@ class Owner(commands.Cog):
 
         if not is_owner(author_ID):
             await ctx.send(content=f"<@!{author_ID}> Owner commands can only be executed by owners.")
-            await log(f'Owner command cannot be executed by non-owners. ({prefix}setstatus used by {user}', 'warn', client=self.bot)
+            await log(f"Owner command cannot be executed by non-owners. ({prefix}setstatus used by {user}", 'warn', client=self.bot)
             return
 
         args = get_args(ctx)
@@ -92,7 +92,7 @@ class Owner(commands.Cog):
         if status in ('online', 'idle', 'dnd', 'invisible'):
             await activity.change_activity(status=status, client=self.bot)
 
-            await log(f'Online status was updated to \'{status}\' by {user}', 'info', client=self.bot)
+            await log(f"Online status was updated to '{status}' by {user}", 'info', client=self.bot)
             await ctx.send(content=f"<@!{author_ID}> Status was updated to **{status}**! (Note: If it doesn't update it might've got rate-limited, try again in a couple minutes in that case.)")
         else:
             await ctx.send(content=f"<@!{author_ID}> **{status}** was not a valid argument. Please use one of the following: 'online', 'idle', 'dnd', 'invisible' (without the apostrophes).")
@@ -121,7 +121,7 @@ class Owner(commands.Cog):
         if atype in ('PLAYING', 'WATCHING', 'LISTENING', 'STREAMING'):
             await activity.change_activity(atype=atype, name=name, client=self.bot)
 
-            await log(f'Activity was updated to \'{atype} {name}\' by {user}', 'info', client=self.bot)
+            await log(f"Activity was updated to '{atype} {name}' by {user}", 'info', client=self.bot)
             await ctx.send(content=f"<@!{author_ID}> Activity was updated to **{atype} {name}**! (Note: If it doesn't update it might've got rate-limited, try again in a couple minutes in that case.)")
         else:
             await ctx.send(content=f"<@!{author_ID}> **{atype}** was not a valid argument. Please use one of the following: 'PLAYING', 'WATCHING', 'LISTENING', 'STREAMING' (without the apostrophes).")
@@ -140,13 +140,13 @@ class Owner(commands.Cog):
 
         if not is_owner(author_ID):
             await ctx.send(content=f'<@!{author_ID}> Owner commands can only be executed by owners.')
-            await log(f'Owner command cannot be executed by non-owners. ({prefix}setpresence used by {user}', 'warn', client=self.bot)
+            await log(f"Owner command cannot be executed by non-owners. ({prefix}setpresence used by {user}", 'warn', client=self.bot)
             return
             
         args = get_args(ctx)
 
         if len(args) < 3:
-            await ctx.send(content=f'<@!{author_ID}> Not enough arguments. Use `{prefix}setpresence <status> <activity> <activity name>`.')
+            await ctx.send(content=f"<@!{author_ID}> Not enough arguments. Use `{prefix}setpresence <status> <activity> <activity name>`.")
             return
 
         status = args[0].lower()
@@ -163,7 +163,7 @@ class Owner(commands.Cog):
 
         await activity.change_activity(status=status, atype=atype, name=name, client=self.bot)
 
-        await log(f'Presence was updated to \'{status} - {atype} {name}\' by {user}', 'info', client=self.bot)
+        await log(f"Presence was updated to '{status} - {atype} {name}' by {user}", 'info', client=self.bot)
         await ctx.send(content=f"<@!{author_ID}> Presence was updated to **{status}** - **{atype} {name}**! (Note: If it doesn't update it might've got rate-limited, try again in a couple minutes in that case.)")
         return
 
@@ -200,6 +200,7 @@ class Owner(commands.Cog):
             json.dump(database, f, indent=4)
             f.truncate()
 
+        await log(f"Next scan got delayed by {args[0]} hours.", 'info', client=self.bot)
         await ctx.send(content=f"<@!{author_ID}> Next scan successfully delayed by {args[0]} hours.")
         return
 

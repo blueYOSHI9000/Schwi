@@ -49,7 +49,7 @@ class RPC(commands.Cog):
                     break
 
         if result == False:
-            await ctx.send(content=f'<@!{author_ID}> Could not find a RPC entry with the name "**{name}**".')
+            await ctx.send(content=f"<@!{author_ID}> Could not find a RPC entry with the name '**{name}**'.")
             return
 
         with open('settings/database.json', 'r+') as f:
@@ -65,16 +65,16 @@ class RPC(commands.Cog):
             f.truncate()
 
         if json.load(open('settings/config.json', 'r'))['RPC']['autoRestart'] == True:
-            await ctx.send(content=f'<@!{author_ID}> Restarting now to load the RPC entry "**{name}**"...')
-            await log(f'{user} loaded the RPC entry "{name}". Schwi is now rebooting...', 'info')
+            await ctx.send(content=f"<@!{author_ID}> Restarting now to load the RPC entry '**{name}**'...")
+            await log(f"{user} loaded the RPC entry '{name}'. Schwi is now rebooting...", 'info')
 
             # sleep for 1s so the log can be written to file in time
             time.sleep(1)
 
             os.execl(sys.executable, sys.executable, *sys.argv)
         else:
-            await ctx.send(content=f'<@!{author_ID}> The RPC entry "**{name}**" will be loaded the next time Schwi is started. Use {prefix}reboot to reboot Schwi now.')
-            await log(f'{user} loaded the RPC entry "{name}".', 'info')
+            await ctx.send(content=f"<@!{author_ID}> The RPC entry '**{name}**' will be loaded the next time Schwi is started. Use {prefix}reboot to reboot Schwi now.")
+            await log(f"{user} loaded the RPC entry '{name}'.", 'info')
         return
 
     @commands.command(
@@ -102,8 +102,8 @@ class RPC(commands.Cog):
             json.dump(database, f, indent=4)
             f.truncate()
 
-        await ctx.send(content=f'<@!{author_ID}> RPC will be quit. RPC can only be updated during every interval so it might take a while.')
-        await log(f'{user} quit RPC.', 'info')
+        await ctx.send(content=f"<@!{author_ID}> RPC will be quit. RPC can only be updated during every interval so it might take a while.")
+        await log(f"{user} quit RPC.", 'info')
         return
 
     @commands.command(
@@ -130,8 +130,8 @@ class RPC(commands.Cog):
             json.dump(database, f, indent=4)
             f.truncate()
 
-        await ctx.send(content=f'<@!{author_ID}> The time got reset to the current time. RPC can only be updated during every interval so it might take a while to display.')
-        await log(f'{user} reset RPC time.', 'spamInfo')
+        await ctx.send(content=f"<@!{author_ID}> The time got reset to the current time. RPC can only be updated during every interval so it might take a while to display.")
+        await log(f"{user} reset RPC time.", 'spamInfo')
         return
 
 

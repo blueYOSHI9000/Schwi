@@ -4,7 +4,7 @@ import feedparser
 import json
 import time
 
-import modules.convert_time as t
+import modules.convert_time as ct
 from modules.log import log
 import modules.misc as misc
 
@@ -41,7 +41,7 @@ def get_new_items_from_feed(*, feed=False, url=False, last_checked):
     final = []
     # dont stop scanning after the items are older since some new items might've been lower in the list (like for Manga, some special in-between chapters might've been released later on and as such are lower in the list where they technically belong despite being new)
     for i in feed.entries:
-        if i.published_parsed > t.ms_to_struct(last_checked):
+        if i.published_parsed > ct.ms_to_struct(last_checked):
             final.append(i)
 
     # TODO: add the last 10 titles or something to the database as a double check
@@ -109,7 +109,7 @@ def get_embed_from_item(*, item, db_item, feed, channel_item, client):
 
     return embed
 
-def already_checked(last_checked, interval, current_time=t.get_current_time()):
+def already_checked(last_checked, interval, current_time=ct.get_current_time()):
     """Checks if feed has already scanned in the last interval.
 
     Args:
@@ -120,7 +120,7 @@ def already_checked(last_checked, interval, current_time=t.get_current_time()):
     # multiply interval by 1000 to convert from seconds to ms
     # subtract 5s from interval to make sure that a scheduled scan doesn't hit it
     last_checked = last_checked + (interval * 1000 - 5000)
-    last_checked = t.ms_to_struct(last_checked)
+    last_checked = ct.ms_to_struct(last_checked)
 
     return last_checked > current_time
 
@@ -154,13 +154,13 @@ async def scan_all_feeds(*, client):
             post_delay = 0
 
         
-        current_time = t.get_current_time()
+        current_time = ct.get_current_time()
 
         last_checked = database['general']['lastChecked']
 
         # check if already scanned during the last interval
         if already_checked(last_checked, interval, current_time):
-            await log(f' Skip scanning all feeds ({int(interval / 60)}min interval)..', 'info', client=client)
+            await log(f" Skip scanning all feeds ({int(interval / 60)}min interval)..", 'info', client=client)
             return
 
         await log('Start scanning all feeds.', 'info', client=client)
@@ -174,29 +174,29 @@ async def scan_all_feeds(*, client):
 
             # check if already scanned during the last interval
             if already_checked(last_checked, interval, current_time):
-                await log(f' Skip scanning {feeds[i]["name"]} ({int(interval / 60)}min interval).', 'spamInfo', client=client)
+                await log(f" Skip scanning {feeds[i]['name']} ({int(interval / 60)}min interval).", 'spamInfo', client=client)
                 continue
 
-            await log(f'Start scanning {feeds[i]["name"]}.', 'spamInfo', client=client)
+            await log(f"Start scanning {feeds[i]['name']}.", 'spamInfo', client=client)
 
             feed = scan_feed(feeds[i]['url'])
             results = get_new_items_from_feed(feed=feed, last_checked=feeds[i]['lastChecked'])
 
             # if feed is unavailable, mark it as such with the current time
             if results == False:
-                await log(f'{feeds[i]["name"]} is not available (url: \'{feeds[i]["url"]}\'.', 'spamInfo', client=client)
+                await log(f"{feeds[i]['name']} is not available (url: '{feeds[i]['url']}'.", 'spamInfo', client=client)
                 # only mark it with the current time if it wasn't already marked as unavailable before
                 if feeds[i]['unavailable'] == False:
-                    feeds[i]['unavailable'] = t.struct_to_ms(current_time)
+                    feeds[i]['unavailable'] = ct.struct_to_ms(current_time)
 
                     for c in feeds[i]['channels']:
                         time.sleep(post_delay)
 
                         channel = client.get_channel(c['channelID'])
                         try:
-                            await channel.send(f'**{c["feedName"]}** is not available (this message won\'t be posted again until it\'s available again). Feed URL: {feeds[i]["url"]}')
+                            await channel.send(f"**{c['feedName']}** is not available (this message won't be posted again until it's available again). Feed URL: {feeds[i]['url']}")
                         except:
-                            await log(f'Could not send {feeds[i]["name"]} as the channel is likely deleted.', 'warn', client=client)
+                            await log(f"Could not send {feeds[i]['name']} as the channel is likely deleted.", 'warn', client=client)
 
                 continue
 
@@ -218,9 +218,9 @@ async def scan_all_feeds(*, client):
                     channel = client.get_channel(c['channelID'])
                     try:
                         await channel.send(embed=embed)
-                        await channel.send(f'...and {len(results) - combine_posts} more from {c["feedName"]}.')
+                        await channel.send(f"...and {len(results) - combine_posts} more from {c['feedName']}.")
                     except:
-                        await log(f'Could not send {feeds[i]["name"]} as the channel is likely deleted.', 'warn', client=client)
+                        await log(f"Could not send {feeds[i]['name']} as the channel is likely deleted.", 'warn', client=client)
 
             # post all items
             else:
@@ -238,15 +238,16 @@ async def scan_all_feeds(*, client):
                         try:
                             await channel.send(embed=embed)
                         except:
-                            await log(f'Could not send {feeds[i]["name"]} as the channel is likely deleted.', 'warn', client=client)
+                            await log(f"Could not send {feeds[i]['name']} as the channel is likely deleted.", 'warn', client=client)
 
-            feeds[i]['lastChecked'] = t.struct_to_ms(t.get_current_time())
-            await log(f' Done scanning {feeds[i]["name"]}.', 'spamInfo', client=client)
+            feeds[i]['lastChecked'] = ct.struct_to_ms(ct.get_current_time())
+            await log(f" Done scanning {feeds[i]['name']}.", 'spamInfo', client=client)
 
         database['feeds'] = feeds
-        database['general']['lastChecked'] = t.struct_to_ms(t.get_current_time())
+        database['general']['lastChecked'] = ct.struct_to_ms(ct.get_current_time())
         # reset file position to the beginning - stackoverflow copy, dont ask
         f.seek(0)
         json.dump(database, f, indent=4)
         f.truncate()
         await log('All feeds scanned.', 'info', client=client)
+        return

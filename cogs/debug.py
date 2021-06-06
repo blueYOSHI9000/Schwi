@@ -29,9 +29,9 @@ class Debug(commands.Cog):
             await log('Owner command cannot be executed by non-owners.', 'warn', client=self.bot)
             return
 
-        print(f'\n{ctx}\n\n==============================\n\n{ctx.message}')
+        print(f"\n{ctx}\n\n==============================\n\n{dir(self.bot.user)}")
 
-        #print(f'\n\n{ctx.guild == None}\n\n')
+        #print(f"\n\n{ctx.guild == None}\n\n")
         return
 
 

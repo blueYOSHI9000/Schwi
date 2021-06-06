@@ -56,13 +56,13 @@ async def log (text, level, *, client=False, discord_log=True, cli_log=True):
 
     # print to console
     if level >= log_level and cli_log == True:
-        print(f'[{time}] {text}')
+        print(f"[{time}] {text}")
 
     # remove newlines as neither discord nor the file need them
-    text = text.replace("\n", "")
+    text = text.replace('\n', '')
 
     # file logging
-    with open("settings/log.txt", "r") as f:
+    with open('settings/log.txt', 'r') as f:
         lines = f.readlines()
 
         # add newline to last line because apparently its needed
@@ -73,7 +73,7 @@ async def log (text, level, *, client=False, discord_log=True, cli_log=True):
         length = length - max_lines
         if (length > 0):
             lines = lines[length:-1]
-    with open("settings/log.txt", "w") as f:
+    with open('settings/log.txt', 'w') as f:
         i = 1
         for line in lines:
             f.write(line)
@@ -90,7 +90,7 @@ async def log (text, level, *, client=False, discord_log=True, cli_log=True):
                 if (discord_log_level > 2 and level >= discord_log_level) or (discord_log_level == 2 and level >= log_level):
                     channel = client.get_channel(int(discord_log_channel))
                     if discord_log_time == True:
-                        await channel.send(f'`[{time}]` {text}')
+                        await channel.send(f"`[{time}]` {text}")
                     else:
                         await channel.send(text)
 
@@ -120,24 +120,24 @@ def reglog (text, level, *, client=False, discord_log=True, cli_log=True):
 
     # print to console
     if level >= log_level and cli_log == True:
-        print(f'[{time}] {text}')
+        print(f"[{time}] {text}")
 
     # remove newlines as neither discord nor the file need them
-    text = text.replace("\n", "")
+    text = text.replace('\n', '')
 
     # file logging
-    with open("settings/log.txt", "r") as f:
+    with open('settings/log.txt', 'r') as f:
         lines = f.readlines()
 
         # add newline to last line because apparently its needed
-        lines.append(f'[{time}] {text}\n')
+        lines.append(f"[{time}] {text}\n")
 
         # calculate how many lines have to be removed so there's not too many (based on max_lines)
         length = len(lines)
         length = length - max_lines
         if (length > 0):
             lines = lines[length:-1]
-    with open("settings/log.txt", "w") as f:
+    with open('settings/log.txt', 'w') as f:
         i = 1
         for line in lines:
             f.write(line)

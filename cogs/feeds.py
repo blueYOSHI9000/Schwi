@@ -27,7 +27,7 @@ class Feeds(commands.Cog):
         # get actual message
         args = get_args(ctx)
 
-        await log(f'{prefix}add executed.', 'spamInfo')
+        await log(f"{prefix}add executed.", 'spamInfo')
         
         user_permissions = ctx.message.author.guild_permissions
         if await misc.check_permission(ctx=ctx, required='editFeeds', user=user_permissions, author_ID=author_ID) == False:
@@ -38,7 +38,7 @@ class Feeds(commands.Cog):
             if args[0].startswith('<#'):
                 channel = self.bot.get_channel(int(args[0][2:-1]))
             else:
-                await ctx.send(content=f'<@!{author_ID}> Invalid channel. Use `{prefix}add <channel> <url> <name>`')
+                await ctx.send(content=f"<@!{author_ID}> Invalid channel. Use `{prefix}add {self.add_command.usage}`")
                 return
 
             # check if channel is valid
@@ -47,20 +47,20 @@ class Feeds(commands.Cog):
 
             url = args[1]
             name = ' '.join(args[2:])
-        except IndexError:
-            await ctx.send(content=f'<@!{author_ID}> Invalid arguments. Use `{prefix}add <channel> <url> <name>`')
+        except (IndexError, ValueError):
+            await ctx.send(content=f"<@!{author_ID}> Invalid arguments. Use `{prefix}add {self.add_command.usage}`")
             return
 
         result = manage_feeds.add_feed(channel=channel, url=url, name=name)
 
         if result == 'added':
-            await ctx.send(content=f'<@!{author_ID}> **{name}** was successfully added to <#{channel.id}>!')
-            await log(f'**{name}** was added to <#{channel.id}>.', 'info', client=self.bot)
+            await ctx.send(content=f"<@!{author_ID}> **{name}** was successfully added to <#{channel.id}>!")
+            await log(f"**{name}** was added to <#{channel.id}>.", 'info', client=self.bot)
         elif result == 'exists':
-            await ctx.send(content=f'<@!{author_ID}> **{name}** is already registered in <#{channel.id}>. Use `{prefix}edit <name>` to edit the entry.')
-            await log(f'**{name}** was already added to <#{channel.id}>.', 'spamInfo', client=self.bot)
+            await ctx.send(content=f"<@!{author_ID}> **{name}** is already registered in <#{channel.id}>. Use `{prefix}edit <name>` to edit the entry.")
+            await log(f"**{name}** was already added to <#{channel.id}>.", 'spamInfo', client=self.bot)
         else:
-            await ctx.send(content=f'<@!{author_ID}> Something went wrong while adding **{name}**, it might\'ve been added, it might\'ve not. Use {prefix}list <#{channel}> to check whether it has been added or not.')
+            await ctx.send(content=f"<@!{author_ID}> Something went wrong while adding **{name}**, it might\'ve been added, it might\'ve not. Use {prefix}list <#{channel}> to check whether it has been added or not.")
 
         return
 
@@ -79,14 +79,14 @@ class Feeds(commands.Cog):
         # get actual message
         text = get_args(ctx, combine=True)
 
-        await log(f'{prefix}remove executed.', 'spamInfo')
+        await log(f"{prefix}remove executed.", 'spamInfo')
         
         user_permissions = ctx.message.author.guild_permissions
         if await misc.check_permission(ctx=ctx, required='editFeeds', user=user_permissions, author_ID=author_ID) == False:
             return
 
         if text == '':
-            await ctx.send(content=f'<@!{author_ID}> Invalid or missing arguments. Use `{prefix}rmurl <url>`.')
+            await ctx.send(content=f"<@!{author_ID}> Invalid or missing arguments. Use `{prefix}rmurl <url>`.")
             return
         
         results = manage_feeds.get_feed_by_name(text, ctx.message.guild.id, return_path=True)
@@ -109,17 +109,17 @@ class Feeds(commands.Cog):
                 json.dump(database, f, indent=4)
                 f.truncate()
 
-            await ctx.send(content=f'<@!{author_ID}> Successfully deleted the entry **{text}**!')
+            await ctx.send(content=f"<@!{author_ID}> Successfully deleted the entry **{text}**!")
             await log(f'**{text}** was removed.', 'info', client=self.bot)
             return
         elif len(results) > 1:
-            await ctx.send(content=f'<@!{author_ID}> There are more results than one.\nUse `{prefix}removeall <name>` to remove all entries with a certain name.\nUse `{prefix}removeurl <url>` to remove all feeds with a certain url.\nUse `{prefix}find <name>` to find all entries with a certain name.')
+            await ctx.send(content=f"<@!{author_ID}> There are more results than one.\nUse `{prefix}removeall <name>` to remove all entries with a certain name.\nUse `{prefix}removeurl <url>` to remove all feeds with a certain url.\nUse `{prefix}find <name>` to find all entries with a certain name.")
             return
         elif len(results) < 1:
-            await ctx.send(content=f'<@!{author_ID}> Could not find any feed with that name in this server. Use `{prefix}list` to list all entries in this server.')
+            await ctx.send(content=f"<@!{author_ID}> Could not find any feed with that name in this server. Use `{prefix}list` to list all entries in this server.")
             return
 
-        await ctx.send(content=f'<@!{author_ID}> Something went wrong while trying delete the entry.')
+        await ctx.send(content=f"<@!{author_ID}> Something went wrong while trying delete the entry.")
 
         return
 
@@ -138,14 +138,14 @@ class Feeds(commands.Cog):
         # get actual message
         text = get_args(ctx, combine=True)
 
-        await log(f'{prefix}removeall executed.', 'spamInfo')
+        await log(f"{prefix}removeall executed.", 'spamInfo')
         
         user_permissions = ctx.message.author.guild_permissions
         if await misc.check_permission(ctx=ctx, required='editFeeds', user=user_permissions, author_ID=author_ID) == False:
             return
 
         if text == '':
-            await ctx.send(content=f'<@!{author_ID}> Invalid or missing arguments. Use `{prefix}rmurl <url>`.')
+            await ctx.send(content=f"<@!{author_ID}> Invalid or missing arguments. Use `{prefix}rmurl <url>`.")
             return
         
         results = manage_feeds.get_feed_by_name(text, ctx.message.guild.id, return_path=True)
@@ -174,14 +174,14 @@ class Feeds(commands.Cog):
                 json.dump(database, f, indent=4)
                 f.truncate()
 
-            await ctx.send(content=f'<@!{author_ID}> Successfully deleted all entries named **{text}**!')
-            await log(f'All entries named **{text}** were removed.', 'info', client=self.bot)
+            await ctx.send(content=f"<@!{author_ID}> Successfully deleted all entries named **{text}**!")
+            await log(f"All entries named **{text}** were removed.", 'info', client=self.bot)
             return
         elif len(results) < 1:
-            await ctx.send(content=f'<@!{author_ID}> Could not find any feed with that name in this server. Use `{prefix}list` to list all entries in this server.')
+            await ctx.send(content=f"<@!{author_ID}> Could not find any feed with that name in this server. Use `{prefix}list` to list all entries in this server.")
             return
 
-        await ctx.send(content=f'<@!{author_ID}> Something went wrong while trying delete the entry.')
+        await ctx.send(content=f"<@!{author_ID}> Something went wrong while trying delete the entry.")
 
         return
 
@@ -200,14 +200,14 @@ class Feeds(commands.Cog):
         # get actual message
         text = get_args(ctx, combine=True)
 
-        await log(f'{prefix}removeurl executed.', 'spamInfo')
+        await log(f"{prefix}removeurl executed.", 'spamInfo')
         
         user_permissions = ctx.message.author.guild_permissions
         if await misc.check_permission(ctx=ctx, required='editFeeds', user=user_permissions, author_ID=author_ID) == False:
             return
 
         if text == '':
-            await ctx.send(content=f'<@!{author_ID}> Invalid or missing arguments. Use `{prefix}rmurl <url>`.')
+            await ctx.send(content=f"<@!{author_ID}> Invalid or missing arguments. Use `{prefix}rmurl <url>`.")
             return
         
         results = manage_feeds.get_feed_by_url(text, ctx.message.guild.id, return_path=True)
@@ -236,14 +236,14 @@ class Feeds(commands.Cog):
                 json.dump(database, f, indent=4)
                 f.truncate()
 
-            await ctx.send(content=f'<@!{author_ID}> Successfully deleted all entries with the url {text}!')
-            await log(f'All entries with the url **{text}** were removed.', 'info', client=self.bot)
+            await ctx.send(content=f"<@!{author_ID}> Successfully deleted all entries with the url {text}!")
+            await log(f"All entries with the url **{text}** were removed.", 'info', client=self.bot)
             return
         elif len(results) < 1:
-            await ctx.send(content=f'<@!{author_ID}> Could not find any feed with that url in this server. Use `{prefix}list` to list all entries in this server.')
+            await ctx.send(content=f"<@!{author_ID}> Could not find any feed with that url in this server. Use `{prefix}list` to list all entries in this server.")
             return
 
-        await ctx.send(content=f'<@!{author_ID}> Something went wrong while trying delete the entry.')
+        await ctx.send(content=f"<@!{author_ID}> Something went wrong while trying delete the entry.")
 
         return
 
@@ -261,7 +261,7 @@ class Feeds(commands.Cog):
         # get actual message
         args = get_args(ctx)
 
-        await log(f'{prefix}move executed.', 'spamInfo')
+        await log(f"{prefix}move executed.", 'spamInfo')
         
         user_permissions = ctx.message.author.guild_permissions
         if await misc.check_permission(ctx=ctx, required='editFeeds', user=user_permissions, author_ID=author_ID) == False:
@@ -274,10 +274,10 @@ class Feeds(commands.Cog):
             if channel.startswith('<#'):
                 channel = self.bot.get_channel(int(channel[2:-1]))
             else:
-                await ctx.send(content=f'<@!{author_ID}> Invalid channel. Use `{prefix}move <name> <new channel>`.')
+                await ctx.send(content=f"<@!{author_ID}> Invalid channel. Use `{prefix}move {self.add_command.usage}`.")
                 return
         except IndexError:
-            await ctx.send(content=f'<@!{author_ID}> Invalid or missing arguments. Use `{prefix}move <name> <new channel>`.')
+            await ctx.send(content=f"<@!{author_ID}> Invalid or missing arguments. Use `{prefix}move <name> <new channel>`.")
             return
         
         results = manage_feeds.get_feed_by_name(name, ctx.message.guild.id, return_path=True)
@@ -292,7 +292,7 @@ class Feeds(commands.Cog):
 
                 for c in feeds[feed_entry]['channels']:
                     if c['channelID'] == channel.id:
-                        await ctx.send(content=f'<@!{author_ID}> **{name}** is already registered in <#{c["channelID"]}>. Use `{prefix}remove <name>` to remove the entry.')
+                        await ctx.send(content=f"<@!{author_ID}> **{name}** is already registered in <#{c['channelID']}>. Use `{prefix}remove <name>` to remove the entry.")
                         return
 
                 feeds[feed_entry]['channels'][channels_entry]['channelID'] = channel.id
@@ -302,17 +302,17 @@ class Feeds(commands.Cog):
                 json.dump(database, f, indent=4)
                 f.truncate()
 
-            await ctx.send(content=f'<@!{author_ID}> Successfully moved the entry **{name}** to <#{channel.id}>!')
+            await ctx.send(content=f"<@!{author_ID}> Successfully moved the entry **{name}** to <#{channel.id}>!")
             await log(f'**{name}** was moved to <#{channel.id}>.', 'info', client=self.bot)
             return
         elif len(results) > 1:
-            await ctx.send(content=f'<@!{author_ID}> There are more results than one.')
+            await ctx.send(content=f"<@!{author_ID}> There are more results than one.")
             return
         elif len(results) < 1:
-            await ctx.send(content=f'<@!{author_ID}> Could not find any feed with that name in this server. Use `{prefix}list` to list all entries in this server.')
+            await ctx.send(content=f"<@!{author_ID}> Could not find any feed with that name in this server. Use `{prefix}list` to list all entries in this server.")
             return
 
-        await ctx.send(content=f'<@!{author_ID}> Something went wrong while trying to move the entry.')
+        await ctx.send(content=f"<@!{author_ID}> Something went wrong while trying to move the entry.")
 
         return
 

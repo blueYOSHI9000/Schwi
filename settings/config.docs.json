@@ -20,9 +20,13 @@
         "oldestFirst": true,//posts the oldest items first
         "dateFormat": "%a %d %b %Y at %I:%M%p"//the date format that's used, formatted using pythons time.strftime() function (see https://docs.python.org/2/library/time.html#time.strftime)
 	},
+    "reminders": {
+        "interval": 2,//the interval in which the bot checks if reminders have to be posted
+        "timezone": ""//timezone for the dates used when creating a reminder - uses local timezone if empty (list of timezones - use the 'TZ database name' column: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
+    },
     "RPC": {
         "autoRestart": true,//whether Schwi should automatically restart when starting rich presence (since it can only be changed at startup)
-        "interval": 5,//the interval in which the bot updates the Rich Presence - time is in minutes - must be at least 1 -- requires a restart
+        "interval": 2,//the interval in which the bot updates the Rich Presence - time is in minutes - must be at least 1 -- requires a restart
         "displayStartTime": true,//Displays the start time, starts when schwi.startrpc is used (time can be reset using schwi.resetrpctime)
         "RetroAchievements": {//settings only used for the RetroAchievements rich presences
             "displayGameName": false,//whether the game name should be displayed (the game name can always be displayed by hovering over the cover art if one is used)
