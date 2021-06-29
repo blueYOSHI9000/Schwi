@@ -177,6 +177,11 @@ class Owner(commands.Cog):
         user = ctx.message.author.name + '#' + ctx.message.author.discriminator
         prefix = json.load(open('settings/config.json', 'r'))['bot']['prefix'][0]
 
+        if not is_owner(author_ID):
+            await ctx.send(content=f'<@!{author_ID}> Owner commands can only be executed by owners.')
+            await log(f"Owner command cannot be executed by non-owners. ({prefix}delayscan used by {user}", 'warn', client=self.bot)
+            return
+
         args = get_args(ctx)
 
         try:

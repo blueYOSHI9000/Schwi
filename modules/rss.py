@@ -153,7 +153,7 @@ async def scan_all_feeds(*, client):
         if post_delay < 0:
             post_delay = 0
 
-        
+
         current_time = ct.get_current_time()
 
         last_checked = database['general']['lastChecked']
