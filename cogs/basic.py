@@ -2,6 +2,8 @@ import discord
 from discord.ext import commands
 from discord import utils
 
+from dateparser import parse
+
 import json
 
 from modules.misc import get_args
@@ -157,6 +159,42 @@ class Basic(commands.Cog):
 
         await ctx.send(embed=embed)
 
+        return
+
+    @commands.command(
+        name='converttime',
+        description='Converts time between timezones and other stuff.',
+        aliases=['ct', 'ctime', 'concertdate', 'cd', 'cdate'],
+        usage='<time to convert> <timezone>'
+    )
+    async def converttime_command(self, ctx):
+        author_ID = ctx.message.author.id
+        prefix = json.load(open('settings/config.json', 'r'))['bot']['prefix'][0]
+        # get arguments
+        args = get_args(ctx)
+
+        await log(f"{prefix}converttime executed.", 'spamInfo')
+
+        if len(args) < 2:
+            await ctx.send(content=f"<@!{author_ID}> Missing argument. Please use `{prefix}converttime <time/date to convert> <timezone>` where timezone can be in the format of either `CEST` or `Europe/Berlin`.")
+            return
+
+        timezone = args[len(args) - 1]
+        date_to_convert = ' '.join(args[:len(args) - 1])
+
+        if timezone == 'local':
+            timezone = json.load(open('settings/config.json', 'r'))['reminders']['timezone']
+
+        if timezone == '':
+            date = parse(date_to_convert, settings={'TO_TIMEZONE': 'etc/UTC', 'RETURN_AS_TIMEZONE_AWARE': False})
+        else:
+            date = parse(date_to_convert, settings={'TO_TIMEZONE': 'etc/UTC', 'RETURN_AS_TIMEZONE_AWARE': False, 'TIMEZONE': timezone})
+
+        if date == None:
+            await ctx.send(content=f"<@!{author_ID}> Something went wrong when trying to convert `{date_to_convert}` to the timezone `{timezone}`. Please use `{prefix}converttime <time/date to convert> <timezone>` where timezone can be in the format of either `CEST` or `Europe/Berlin`.")
+            return
+
+        await ctx.send(content=f"<@!{author_ID}> `{date.strftime('%Y-%m-%d %H:%M (%I:%M%p)')}`")
         return
 
 def setup(bot):

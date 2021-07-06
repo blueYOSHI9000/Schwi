@@ -100,10 +100,12 @@ class Reminders(commands.Cog):
             #print(f"Date string to parse: '{rem_date_input}'")
 
             #TO_TIMEZONE makes sure it converts the time to UTC which is what the bot uses
-            if timezone != "":
-                rem_date = parse(rem_date_input, settings={'TO_TIMEZONE': 'etc/UTC', 'TIMEZONE': timezone})
+            if timezone == '':
+                rem_date = parse(rem_date_input, settings={'TO_TIMEZONE': 'etc/UTC', 'RETURN_AS_TIMEZONE_AWARE': False})
             else:
-                rem_date = parse(rem_date_input, settings={'TO_TIMEZONE': 'etc/UTC'})
+                rem_date = parse(rem_date_input, settings={'TO_TIMEZONE': 'etc/UTC', 'RETURN_AS_TIMEZONE_AWARE': False, 'TIMEZONE': timezone})
+
+            print(rem_date)
 
             if rem_date == None:
                 await ctx.send(content=f"<@!{author_ID}> Could not parse date `{rem_date_input}`. This might also be caused by using the command wrong (or the bot being broken), try using `{prefix}add {self.addreminder_command.usage}`")
