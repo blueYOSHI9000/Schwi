@@ -186,15 +186,16 @@ class Basic(commands.Cog):
             timezone = json.load(open('settings/config.json', 'r'))['reminders']['timezone']
 
         if timezone == '':
-            date = parse(date_to_convert, settings={'TO_TIMEZONE': 'etc/UTC', 'RETURN_AS_TIMEZONE_AWARE': False})
+            date = parse(date_to_convert, settings={'TO_TIMEZONE': timezone, 'RETURN_AS_TIMEZONE_AWARE': False})
         else:
-            date = parse(date_to_convert, settings={'TO_TIMEZONE': 'etc/UTC', 'RETURN_AS_TIMEZONE_AWARE': False, 'TIMEZONE': timezone})
+            date = parse(date_to_convert, settings={'TO_TIMEZONE': timezone, 'RETURN_AS_TIMEZONE_AWARE': False})
 
         if date == None:
             await ctx.send(content=f"<@!{author_ID}> Something went wrong when trying to convert `{date_to_convert}` to the timezone `{timezone}`. Please use `{prefix}converttime <time/date to convert> <timezone>` where timezone can be in the format of either `CEST` or `Europe/Berlin`.")
             return
 
-        await ctx.send(content=f"<@!{author_ID}> `{date.strftime('%Y-%m-%d %H:%M (%I:%M%p)')}`")
+        print(date)
+        await ctx.send(content=f"<@!{author_ID}> `{date.strftime('%Y-%m-%d %H:%M (%I:%M%p)')}` (converted from `{timezone}`)")
         return
 
 def setup(bot):
