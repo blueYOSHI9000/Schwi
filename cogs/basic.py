@@ -186,9 +186,11 @@ class Basic(commands.Cog):
             timezone = json.load(open('settings/config.json', 'r'))['reminders']['timezone']
 
         if timezone == '':
-            date = parse(date_to_convert, settings={'TO_TIMEZONE': timezone, 'RETURN_AS_TIMEZONE_AWARE': False})
-        else:
-            date = parse(date_to_convert, settings={'TO_TIMEZONE': timezone, 'RETURN_AS_TIMEZONE_AWARE': False})
+            await ctx.send(content=f"<@!{author_ID}> `local` argument can only be used if a timezone is entered in `config.json`>`reminders`>`timezone`.")
+            return
+
+        # Convert time (simply let dateparser handle it)
+        date = parse(date_to_convert, settings={'TO_TIMEZONE': timezone, 'RETURN_AS_TIMEZONE_AWARE': False})
 
         if date == None:
             await ctx.send(content=f"<@!{author_ID}> Something went wrong when trying to convert `{date_to_convert}` to the timezone `{timezone}`. Please use `{prefix}converttime <time/date to convert> <timezone>` where timezone can be in the format of either `CEST` or `Europe/Berlin`.")
