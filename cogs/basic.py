@@ -197,7 +197,7 @@ class Basic(commands.Cog):
             return
 
         print(date)
-        await ctx.send(content=f"<@!{author_ID}> `{date.strftime('%Y-%m-%d %H:%M (%I:%M%p)')}` (converted from `{timezone}`)")
+        await ctx.send(content=f"<@!{author_ID}> `{date.strftime('%Y-%m-%d %H:%M (%I:%M%p)')}` (converted from `{date_to_convert}` to `{timezone}`)")
         return
 
 def setup(bot):
