@@ -179,8 +179,12 @@ async def scan_all_feeds(*, client):
 
             await log(f"Start scanning {feeds[i]['name']}.", 'spamInfo', client=client)
 
-            feed = scan_feed(feeds[i]['url'])
-            results = get_new_items_from_feed(feed=feed, last_checked=feeds[i]['lastChecked'])
+            try:
+                feed = scan_feed(feeds[i]['url'])
+                results = get_new_items_from_feed(feed=feed, url=feeds[i]['url'], last_checked=feeds[i]['lastChecked'])
+            except:
+                await log(f"Failed to scan {feeds[i]['url']}.", 'warn', client=client)
+                continue;
 
             # if feed is unavailable, mark it as such with the current time
             if results == False:
