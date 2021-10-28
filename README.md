@@ -17,3 +17,10 @@ Note: Only owners can do this so make sure the correct owner ID was entered in c
 Instead of using the `schwi.` prefix (or whatever prefix is used) it's also possible to simply @ the bot.
 
 Also, if the bot suddenly stopped responding, chances are it silently crashed (which hopefully never happens).
+
+## Don't rely on this too much
+I once missed an appointment because I looked at the `schwi.listreminders` time, converted it from UTC to my local timezone with `schwi.converttime` and it ended up being wrong. Now, you might be thinking that I fixed this since then but boy do I have bad news for you!
+In addition to that, RSS feeds are *NOT* reliable. Though this partly to blame for the RSS site I added because that one broke too. Needless to say, I think you figured out that this too did not get fixed.
+
+## So when will these be fixed
+Once I rewrite the entire project. It should be noted that my plans for the rewrite get bigger and more ambitious with each passing day. It should also be noted that I'm currently rewriting another project as well so it'll take some time until I get to this one again and even when I'll get around to this, rewriting it will take quite some time since my plans are probably bigger than NASA's plans at that point.

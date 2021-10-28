@@ -22,7 +22,9 @@
 	},
     "reminders": {
         "interval": 2,//the interval in which the bot checks if reminders have to be posted
-        "timezone": ""//timezone for the dates used when creating a reminder - uses local timezone if empty (list of timezones - use the 'TZ database name' column: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
+        "timezone": "",//timezone for the dates used when creating a reminder - uses local timezone if empty (list of timezones - use the 'TZ database name' column: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
+        "dailyReminderCheck": true,//if the bot should automatically list all of todays reminders at the start of a day -- note that it only checks for the first bot owner listed at the top here
+        "dailyReminderCheckChannel": 000000000000000000//in which channel it should be posted in (has to be a channel ID)
     },
     "RPC": {
         "autoRestart": true,//whether Schwi should automatically restart when starting rich presence (since it can only be changed at startup)

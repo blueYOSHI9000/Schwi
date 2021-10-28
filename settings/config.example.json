@@ -23,7 +23,9 @@
 	},
     "reminders": {
         "interval": 2,
-        "timezone": ""
+        "timezone": "",
+        "dailyReminderCheck": true,
+        "dailyReminderCheckChannel": 000000000000000000
     },
     "RPC": {
         "autoRestart": true,

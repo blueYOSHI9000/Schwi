@@ -249,6 +249,22 @@ class Reminders(commands.Cog):
         await ctx.send(content=f"<@!{author_ID}> Reminder with the ID `{reminder['id']}` will be posted on `{rem_date.strftime('%Y-%m-%d %H:%M (%I:%M%p) UTC')}` with the following text:\n{reminder['message']}")
         return
 
+    @commands.command(
+        name='checkdailyreminders',
+        description='Checks if there\'s any reminders today',
+        aliases=['dailyremindercheck', 'checkdailyrem', 'dailyremcheck', 'todayrem', 'dailyrem'],
+        usage=''
+    )
+    async def checkdailyreminders_command(self, ctx):
+        author_ID = ctx.message.author.id
+        user = ctx.message.author.name + '#' + ctx.message.author.discriminator
+        prefix = json.load(open('settings/config.json', 'r'))['bot']['prefix'][0]
+        # get actual message
+        args = get_args(ctx)
+
+        await mrem.daily_reminder_check(author=author_ID, client=self.bot)
+        return
+
 def setup(bot):
     bot.add_cog(Reminders(bot))
     # Adds the Reminders commands to the bot
