@@ -50,7 +50,7 @@ async def scan_all_reminders(*, client):
         client (discord.py client object): the discord.py client needed to post discord messages
     """
     # dirty solution since it only checks for the first author
-    await daily_reminder_check(author=json.load(open('settings/config.json', 'r'))['bot']['owners'][0], client=client)
+    await daily_reminder_check(author=int(json.load(open('settings/config.json', 'r'))['bot']['owners'][0]), client=client)
 
     await log('Start scanning all reminders.', 'spamInfo', client=client)
 
@@ -82,11 +82,11 @@ async def daily_reminder_check(*, force=False, author, client):
 
     current_time = ct.get_current_time()
 
-    if json.load(open('settings/config.json', 'r'))['reminders']['dailyReminderCheck'] != True & force != True:
+    if (json.load(open('settings/config.json', 'r'))['reminders']['dailyReminderCheck'] != True and force != True):
         await log('Skipped doing daily reminder check as it\'s been disabled in config.', 'spamInfo', client=client)
         return
 
-    if current_time.tm_year == last_daily_check.tm_year & current_time.tm_mon == last_daily_check.tm_mon & current_time.tm_mday == last_daily_check.tm_mday & force != True:
+    if current_time.tm_year == last_daily_check.tm_year and current_time.tm_mon == last_daily_check.tm_mon and current_time.tm_mday == last_daily_check.tm_mday and force != True:
         await log('Skipped doing daily reminder check as it\'s already been done.', 'spamInfo', client=client)
         return
 
@@ -97,12 +97,8 @@ async def daily_reminder_check(*, force=False, author, client):
     for i in range(len(reminders)):
         reminder_date = ct.ms_to_struct(reminders[i]['date'])
 
-        # ugly if chain because combining it to a single big if doesn't work for some reason
-        if reminders[i]['author'] == author:
-            if current_time.tm_year == reminder_date.tm_year:
-                if current_time.tm_mon == reminder_date.tm_mon:
-                    if current_time.tm_mday == reminder_date.tm_mday:
-                        todays_reminders.append(reminders[i]['id'])
+        if reminders[i]['author'] == author and current_time.tm_year == reminder_date.tm_year and current_time.tm_mon == reminder_date.tm_mon and current_time.tm_mday == reminder_date.tm_mday:
+            todays_reminders.append(reminders[i]['id'])
 
     if len(todays_reminders) == 0:
         await log('Skipped posting daily reminders as there\'s no reminders today.', 'spamInfo', client=client)
@@ -111,7 +107,7 @@ async def daily_reminder_check(*, force=False, author, client):
     try:
         await log('Posting daily reminder check...', 'spamInfo', client=client)
         channel = client.get_channel(json.load(open('settings/config.json', 'r'))['reminders']['dailyReminderCheckChannel'])
-        await channel.send(f"There are {len(todays_reminders)} reminders today: `{'`, `'.join(todays_reminders)}`")
+        await channel.send(f"There are {len(todays_reminders)} reminder(s) today: `{'`, `'.join(todays_reminders)}`")
     except AttributeError:
         await log('Could not post daily reminder check, likely due to wrong channel ID inside config > reminders > dailyReminderCheckChannel.', 'warn', client=client)
 
