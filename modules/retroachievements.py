@@ -1,4 +1,4 @@
-import urllib.request
+import requests
 import json
 import re
 
@@ -16,52 +16,53 @@ def get_ra_rich_presence(db_entry):
     Returns:
         dict with all arguments needed to update it with pypresence directly
     """
-    with urllib.request.urlopen(f"https://retroachievements.org/API/API_GetUserSummary.php?z={ra_user}&y={ra_api_key}&u={ra_user}&g=1&a=5") as url:
-        data = json.loads(url.read().decode())
+    r = requests.get(f"https://retroachievements.org/API/API_GetUserSummary.php?z={ra_user}&y={ra_api_key}&u={ra_user}&g=1&a=5")
 
-        config = json.load(open('settings/config.json', 'r'))
+    data = json.loads(r.text)
 
-        last_game = data['LastGameID']
-        per_game_options = db_entry['perGameOptions']
+    config = json.load(open('settings/config.json', 'r'))
 
-        game_name = data['LastGame']['Title']
-        game_ID = data['LastGameID']
+    last_game = data['LastGameID']
+    per_game_options = db_entry['perGameOptions']
 
-        # check per game options and apply them
-        if last_game in per_game_options:
-            game_options = per_game_options[last_game]
+    game_name = data['LastGame']['Title']
+    game_ID = data['LastGameID']
 
-            if 'gameName' in game_options:
-                game_name = game_options['gameName']
-        
-        rich_presence = {}
+    # check per game options and apply them
+    if last_game in per_game_options:
+        game_options = per_game_options[last_game]
 
+        if 'gameName' in game_options:
+            game_name = game_options['gameName']
+    
+    rich_presence = {}
+
+    if config['RPC']['RetroAchievements']['displayGameName'] == True:
         if config['RPC']['RetroAchievements']['displayGameName'] == True:
-            if config['RPC']['RetroAchievements']['displayGameName'] == True:
-                with urllib.request.urlopen(f"https://retroachievements.org/API/API_GetGameInfoAndUserProgress.php?z={ra_user}&y={ra_api_key}&u={ra_user}&g={game_ID}") as user_progress_url:
-                    user_progress_data = json.loads(user_progress_url.read().decode())
-                    rich_presence['details'] = f'[{user_progress_data["NumAwardedToUser"]}/{user_progress_data["NumAchievements"]}] {game_name}'
-            else:
-                rich_presence['details'] = game_name
+            r2 = requests.get(f"https://retroachievements.org/API/API_GetGameInfoAndUserProgress.php?z={ra_user}&y={ra_api_key}&u={ra_user}&g={game_ID}")
+            user_progress_data = json.loads(r2.text)
+            rich_presence['details'] = f'[{user_progress_data["NumAwardedToUser"]}/{user_progress_data["NumAchievements"]}] {game_name}'
+        else:
+            rich_presence['details'] = game_name
 
-        rich_presence['state'] = data['RichPresenceMsg']
+    rich_presence['state'] = data['RichPresenceMsg']
 
-        rich_presence['large_image'] = game_ID
-        rich_presence['large_text'] = game_name
+    rich_presence['large_image'] = game_ID
+    rich_presence['large_text'] = game_name
 
-        if config['RPC']['RetroAchievements']['displaySmallImage'] == True:
-            rich_presence['small_image'] = 'ra'
-            rich_presence['small_text'] = config['RPC']['RetroAchievements']['smallImageText']
+    if config['RPC']['RetroAchievements']['displaySmallImage'] == True:
+        rich_presence['small_image'] = 'ra'
+        rich_presence['small_text'] = config['RPC']['RetroAchievements']['smallImageText']
 
-        # check per game options and apply them
-        if last_game in per_game_options:
-            game_options = per_game_options[last_game]
+    # check per game options and apply them
+    if last_game in per_game_options:
+        game_options = per_game_options[last_game]
 
-            if 'replaceRegex' in game_options:
-                # delete the regex match
-                rich_presence['state'] = re.sub(game_options['replaceRegex'], '', rich_presence['state'])
-            elif 'useRegex' in game_options:
-                # only use the regex matches
-                rich_presence['state'] = ''.join(re.findall(game_options['replaceRegex'], rich_presence['state']))
+        if 'replaceRegex' in game_options:
+            # delete the regex match
+            rich_presence['state'] = re.sub(game_options['replaceRegex'], '', rich_presence['state'])
+        elif 'useRegex' in game_options:
+            # only use the regex matches
+            rich_presence['state'] = ''.join(re.findall(game_options['replaceRegex'], rich_presence['state']))
 
-        return rich_presence
+    return rich_presence
